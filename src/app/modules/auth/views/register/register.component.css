@@ -1,0 +1,126 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.register-container {
+  background-color: rgba(8, 180, 100, 0.268);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.register-container h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 80%;
+  padding: 10px;
+  padding-right: 40px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 5%;
+}
+
+.form-group input::placeholder {
+  color: #aaa;
+}
+
+.form-group input:focus {
+  border-color: #1db954;
+  box-shadow: 0 0 5px rgba(29, 185, 84, 0.5);
+  outline: none;
+}
+
+.toggle-password {
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button {
+  background-color: #1db954; /* Spotify green */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button.cancel {
+  background-color: #ccc;
+  color: #333;
+}
+
+.button.logout {
+  background-color: #e53935; /* Red for logout */
+}
+
+.button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.button:active {
+  transform: scale(0.95);
+}
+
+.logged-in {
+  text-align: center;
+  margin-top: 15px;
+  color: #1db954;
+  font-weight: bold;
+}
+
+.logged-out {
+  text-align: center;
+  margin-top: 15px;
+  color: #b95b1d;
+  font-weight: bold;
+}
+
+/* ----------------------------------- */
+
+/* Media Queries for Responsiveness */
+@media (max-width: 600px) {
+  .register-container {
+    padding: 15px;
+  }
+
+  .button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
