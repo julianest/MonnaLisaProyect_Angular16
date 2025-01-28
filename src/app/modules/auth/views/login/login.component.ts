@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ServicesService } from 'src/app/services/services.service';
 
 @Component({
@@ -11,7 +12,7 @@ export class LoginComponent {
 
   loginForm!: FormGroup;
 
-  constructor(private servicio: ServicesService, private formBuilder: FormBuilder) {
+  constructor(private servicio: ServicesService, private formBuilder: FormBuilder, private router: Router) {
     this.armarFormulario();
   }
 
@@ -32,9 +33,25 @@ export class LoginComponent {
       }
     }
 
-    this.servicio.servicePost(params).subscribe((data) => {
-      console.log(data);
-    });
+    this.servicio.servicePost(params)
+      .subscribe({
+        next: (data: any) => {
+          console.log(data);
+          switch (data.code) {
+            case 200:
+              localStorage.setItem('access_token', data.response.access_token);
+              this.router.navigateByUrl('/dashboard');
+              break;
+            default:
+              console.log('Error en el login');
+              break;
+          }
+        },
+        error: (error: any) => {
+          console.log(error);          
+        },
+        complete: () => {}
+      });
   }
 
 
