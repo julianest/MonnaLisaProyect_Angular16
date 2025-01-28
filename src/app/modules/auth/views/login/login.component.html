@@ -7,6 +7,7 @@
   <title>Login</title>
 </head>
 <body>
+  <app-circular-menu></app-circular-menu>
   <app-animated-background [circleColor]="'#1db954'" [numCircles]="15"></app-animated-background>
   <div class="login-container">
     <h1 style="text-align: center;">PICASSO</h1>
@@ -26,7 +27,7 @@
           <button type="button" class="button cancel" id="cancel-button">Cancelar</button>
       </div>
   </form>
-  <p style="text-align: center; color: black; margin-top: 5%;">¿No tienes cuenta? <a href="/register" id="register-link">¡Regístrate aquí!</a></p>
+  <p style="text-align: center; color: black; margin-top: 5%;">¿No tienes cuenta? <a [routerLink]="['/register']" id="register-link">¡Regístrate aquí!</a></p>
 </div>
 <div id="loading-indicator" style="display: none;">
   <div class="spinner"></div>
