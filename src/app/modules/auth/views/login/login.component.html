@@ -1,41 +1,55 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- <link rel="stylesheet" href="/login/Login.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+    <!-- <link rel="stylesheet" href="/login/Login.css">
   <link rel="stylesheet" href="/styles.css"> -->
-  <!-- <script src="/login/Login.js"  type="module"></script> -->
-
-  <title>Login</title>
-</head>
-<body>
-  <div class="login-container">
-    <h1 style="text-align: center;">PICASSO</h1>
-    <h2>¡Accede a tu cuenta!</h2>
-    <form id="login-form">
-      <div class="form-group">
+    <!-- <script src="/login/Login.js"  type="module"></script> -->
+<!-- 
+    <title>Login</title>
+  </head>
+  <body> -->
+    <div class="login-container">
+      <h1 style="text-align: center">PICASSO</h1>
+      <h2>¡Accede a tu cuenta!</h2>
+      <form [formGroup]="loginForm">
+        <div class="form-group">
           <label for="username">Nombre de Usuario</label>
-          <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required>
-      </div>
-      <div class="form-group">
+          <input formControlName="inputEmail" type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required/>
+        </div>
+        <div class="form-group">
           <label for="password">Contraseña</label>
-          <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
+          <input 
+          formControlName="inputPassword"
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Ingrese su contraseña"
+            required
+          />
           <span class="toggle-password" id="toggle-password">👁️</span>
-      </div>
-      <div class="buttons">
-          <button type="submit" class="button" id="login-button">Iniciar Sesión</button>
-          <button type="button" class="button cancel" id="cancel-button">Cancelar</button>
-      </div>
-  </form>
-  <p style="text-align: center; color: black; margin-top: 5%;">¿No tienes cuenta? <a href="/register" id="register-link">¡Regístrate aquí!</a></p>
-</div>
-<div id="loading-indicator" style="display: none;">
-  <div class="spinner"></div>
-    <p>Cargando...</p>
-</div>
-<div id="response-overlay" style="display: none;">
-  <div id="response-contain-message" style="display: none;"></div>
-</div>
-</body>
-</html>
+        </div>
+        <div class="buttons">
+          <button type="submit" class="button" id="login-button" (click)="pruebaLogin()">
+            Iniciar Sesión
+          </button>
+          <button type="button" class="button cancel" id="cancel-button">
+            Cancelar
+          </button>
+        </div>
+      </form>
+      <p style="text-align: center; color: black; margin-top: 5%">
+        ¿No tienes cuenta?
+        <a href="/register" id="register-link">¡Regístrate aquí!</a>
+      </p>
+    </div>
+    <div id="loading-indicator" style="display: none">
+      <div class="spinner"></div>
+      <p>Cargando...</p>
+    </div>
+    <div id="response-overlay" style="display: none">
+      <div id="response-contain-message" style="display: none"></div>
+    </div>
+  <!-- </body>
+</html> -->

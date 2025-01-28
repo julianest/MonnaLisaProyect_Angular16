@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../auth.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ServicesService } from 'src/app/services/services.service';
 
 @Component({
   selector: 'app-login',
@@ -8,18 +9,32 @@ import { AuthService } from '../../auth.service';
 })
 export class LoginComponent {
 
-  constructor(authLogin: AuthService) { }
+  loginForm!: FormGroup;
 
-  ngOnInit(): void {
+  constructor(private servicio: ServicesService, private formBuilder: FormBuilder) {
+    this.armarFormulario();
+  }
+
+  armarFormulario() {
+    this.loginForm = this.formBuilder.group({
+      inputEmail: ['', [Validators.required, Validators.email]],
+      inputPassword: ['', [Validators.required, Validators.minLength(6)]]
+    });
   }
 
   pruebaLogin() {
+
     const params = {
       url: '/login',
       payload: {
-        email: ''
+        email: String(this.loginForm.controls['inputEmail'].value),
+        password: String(this.loginForm.controls['inputPassword'].value)
       }
-    };
+    }
+
+    this.servicio.servicePost(params).subscribe((data) => {
+      console.log(data);
+    });
   }
 
 
