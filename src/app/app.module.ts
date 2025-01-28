@@ -7,6 +7,7 @@ import { LoginComponent } from './modules/auth/views/login/login.component';
 import { RegisterComponent } from './modules/auth/views/register/register.component';
 import { HomeComponent } from './modules/general/views/home/home.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,8 +18,9 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
     HttpClientModule,
-    AppRoutingModule
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
