@@ -41,6 +41,7 @@ export class LoginComponent {
           switch (data.code) {
             case 200:
               localStorage.setItem('access_token', data.response.access_token);
+              localStorage.setItem('id_user', String(data.response.id_user));
               this.router.navigateByUrl('/home');
               break;
             default:

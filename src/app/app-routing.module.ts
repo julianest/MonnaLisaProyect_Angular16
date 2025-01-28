@@ -9,7 +9,7 @@ import { DashboardComponent } from './modules/general/views/dashboard/dashboard.
 const routes: Routes = [
   // { path: '', component: HomeComponent, title:'Home page' },
   // { path: 'login', component: LoginComponent, title:'Login page' },
-  { path: '', component: LoginComponent },
+  { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent,  title:'Register page' },
   {
     path: '', component: DashboardComponent,
