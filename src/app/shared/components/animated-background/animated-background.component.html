@@ -1,0 +1,13 @@
+<div class="background">
+  <div
+    class="circle"
+    *ngFor="let circle of circles"
+    [style.background]="circleColor"
+    [style.top]="circle.top"
+    [style.left]="circle.left"
+    [style.width]="circle.size"
+    [style.height]="circle.size"
+    [style.animationDelay]="circle.animationDelay"
+  ></div>
+</div>
+<ng-content></ng-content>
