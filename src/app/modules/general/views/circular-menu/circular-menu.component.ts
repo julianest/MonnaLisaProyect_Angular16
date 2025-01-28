@@ -6,7 +6,7 @@ import { Component, HostListener } from '@angular/core';
   styleUrls: ['./circular-menu.component.css']
 })
 export class CircularMenuComponent {
-  isMenuOpen = true;
+  isMenuOpen = false;
   isSmallScreen = false;
   menuItems = [
     { name: 'Contacto', icon: 'fas fa-envelope' },

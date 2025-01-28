@@ -8,6 +8,7 @@ import { RegisterComponent } from './modules/auth/views/register/register.compon
 import { HomeComponent } from './modules/general/views/home/home.component';
 import { AnimatedBackgroundComponent } from './shared/components/animated-background/animated-background.component';
 import { CircularMenuComponent } from './modules/general/views/circular-menu/circular-menu.component';
+import { NumberToTextPipe } from './shared/pipes/numberToText/number-to-text.pipe';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { CircularMenuComponent } from './modules/general/views/circular-menu/cir
     RegisterComponent,
     HomeComponent,
     AnimatedBackgroundComponent,
-    CircularMenuComponent
+    CircularMenuComponent,
+    NumberToTextPipe
   ],
   imports: [
     BrowserModule,
