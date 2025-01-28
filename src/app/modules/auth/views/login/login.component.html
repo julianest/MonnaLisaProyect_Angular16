@@ -4,29 +4,48 @@
   <div class="login-container">
     <h1 style="text-align: center;">PICASSO</h1>
     <h2>¡Accede a tu cuenta!</h2>
-    <form id="login-form">
+    <form id="login-form" [formGroup]="loginForm">
       <div class="form-group">
           <label for="username">Nombre de Usuario</label>
-          <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required>
-      </div>
-      <div class="form-group">
+          <input 
+          formControlName="inputEmail" 
+          type="text" 
+          id="username" 
+          name="username" 
+          placeholder="Ingrese su nombre de usuario" 
+          required/>
+        </div>
+        <div class="form-group">
           <label for="password">Contraseña</label>
-          <input type="password" id="password" name="password" #passwordInput placeholder="Ingrese su contraseña" required>
-          <span class="toggle-password" id="toggle-password" appTogglePassword [targetInput]="passwordInput"  >👁️</span>
-      </div>
-      <div class="buttons">
-          <button type="submit" class="button" id="login-button">Iniciar Sesión</button>
-          <button type="button" class="button cancel" id="cancel-button">Cancelar</button>
-      </div>
-  </form>
-  <p style="text-align: center; color: black; margin-top: 5%;">¿No tienes cuenta? <a [routerLink]="['/register']" id="register-link">¡Regístrate aquí!</a></p>
-</div>
-<div id="loading-indicator" style="display: none;">
-  <div class="spinner"></div>
-    <p>Cargando...</p>
-</div>
-<div id="response-overlay" style="display: none;">
-  <div id="response-contain-message" style="display: none;"></div>
-</div>
-
+          <input 
+          formControlName="inputPassword"
+            type="password"
+            id="password"
+            name="password" #passwordInput
+            placeholder="Ingrese su contraseña"
+            required
+          />
+          <span class="toggle-password" id="toggle-password" appTogglePassword [targetInput]="passwordInput">👁️</span>
+        </div>
+        <div class="buttons">
+          <button type="submit" class="button" id="login-button" (click)="submitLoginData()">
+            Iniciar Sesión
+          </button>
+          <button type="button" class="button cancel" id="cancel-button">
+            Cancelar
+          </button>
+        </div>
+      </form>
+      <p style="text-align: center; color: black; margin-top: 5%">
+        ¿No tienes cuenta?
+        <a [routerLink]="['/register']" id="register-link">¡Regístrate aquí!</a>
+      </p>
+    </div>
+    <div id="loading-indicator" style="display: none">
+      <div class="spinner"></div>
+      <p>Cargando...</p>
+    </div>
+    <div id="response-overlay" style="display: none">
+      <div id="response-contain-message" style="display: none"></div>
+    </div>
 </div>
