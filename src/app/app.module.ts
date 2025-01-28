@@ -7,6 +7,7 @@ import { LoginComponent } from './modules/auth/views/login/login.component';
 import { RegisterComponent } from './modules/auth/views/register/register.component';
 import { HomeComponent } from './modules/general/views/home/home.component';
 import { AnimatedBackgroundComponent } from './shared/components/animated-background/animated-background.component';
+import { CircularMenuComponent } from './modules/general/views/circular-menu/circular-menu.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { AnimatedBackgroundComponent } from './shared/components/animated-backgr
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    AnimatedBackgroundComponent
+    AnimatedBackgroundComponent,
+    CircularMenuComponent
   ],
   imports: [
     BrowserModule,
