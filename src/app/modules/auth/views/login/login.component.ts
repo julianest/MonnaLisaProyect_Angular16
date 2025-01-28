@@ -8,9 +8,5 @@ import { RouterLink } from '@angular/router';
 })
 export class LoginComponent {
 
-  isPasswordVisible: boolean = false;
 
-  togglePasswordVisibility(): void {
-    this.isPasswordVisible = !this.isPasswordVisible;
-  }
 }

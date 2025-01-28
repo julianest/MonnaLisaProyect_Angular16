@@ -9,6 +9,7 @@ import { HomeComponent } from './modules/general/views/home/home.component';
 import { AnimatedBackgroundComponent } from './shared/components/animated-background/animated-background.component';
 import { CircularMenuComponent } from './modules/general/views/circular-menu/circular-menu.component';
 import { NumberToTextPipe } from './shared/pipes/numberToText/number-to-text.pipe';
+import { TogglePasswordDirective } from './shared/directives/toggle-password/toggle-password.directive';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { NumberToTextPipe } from './shared/pipes/numberToText/number-to-text.pip
     HomeComponent,
     AnimatedBackgroundComponent,
     CircularMenuComponent,
-    NumberToTextPipe
+    NumberToTextPipe,
+    TogglePasswordDirective
   ],
   imports: [
     BrowserModule,
