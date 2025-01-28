@@ -7,4 +7,11 @@ import { Component } from '@angular/core';
 })
 export class RegisterComponent {
 
+  isPasswordVisible: boolean = false;
+
+  togglePasswordVisibility(): void {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
+
+
 }
