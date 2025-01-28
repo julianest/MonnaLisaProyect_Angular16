@@ -9,6 +9,10 @@ import { HomeComponent } from './modules/general/views/home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './modules/general/views/dashboard/dashboard.component';
+import { AnimatedBackgroundComponent } from './shared/components/animated-background/animated-background.component';
+import { CircularMenuComponent } from './modules/general/views/circular-menu/circular-menu.component';
+import { NumberToTextPipe } from './shared/pipes/numberToText/number-to-text.pipe';
+import { TogglePasswordDirective } from './shared/directives/toggle-password/toggle-password.directive';
 
 @NgModule({
   declarations: [
@@ -16,7 +20,11 @@ import { DashboardComponent } from './modules/general/views/dashboard/dashboard.
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    DashboardComponent
+    DashboardComponent,
+    AnimatedBackgroundComponent,
+    CircularMenuComponent,
+    NumberToTextPipe,
+    TogglePasswordDirective
   ],
   imports: [
     BrowserModule,
