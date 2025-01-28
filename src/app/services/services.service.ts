@@ -10,7 +10,16 @@ export class ServicesService {
   constructor(private http: HttpClient) { }
   
   servicePost(params: any): Observable<any> {
-    return this.http.post(envaironment.API_BASE_URL + params.url, params.payload);
+    if (params.url == "/login" || params.url == "/register") {
+      return this.http.post(envaironment.API_BASE_URL + params.url, params.payload);      
+    } else {
+      return this.http.post(envaironment.API_BASE_URL + params.url, params.payload, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        }
+      });
+    }
   }
 
   serviceGet(params: any) {

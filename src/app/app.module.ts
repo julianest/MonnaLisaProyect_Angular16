@@ -8,7 +8,7 @@ import { RegisterComponent } from './modules/auth/views/register/register.compon
 import { HomeComponent } from './modules/general/views/home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DashboardComponent } from './modules/general/dashboard/dashboard.component';
+import { DashboardComponent } from './modules/general/views/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [

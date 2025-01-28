@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ServiceResponse } from 'src/app/models/response/auth-response.model';
 import { ServicesService } from 'src/app/services/services.service';
 
 @Component({
@@ -35,12 +36,12 @@ export class LoginComponent {
 
     this.servicio.servicePost(params)
       .subscribe({
-        next: (data: any) => {
+        next: (data: ServiceResponse) => {
           console.log(data);
           switch (data.code) {
             case 200:
               localStorage.setItem('access_token', data.response.access_token);
-              this.router.navigateByUrl('/dashboard');
+              this.router.navigateByUrl('/home');
               break;
             default:
               console.log('Error en el login');
@@ -53,7 +54,4 @@ export class LoginComponent {
         complete: () => {}
       });
   }
-
-
-
 }

@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './modules/auth/views/login/login.component';
 import { RegisterComponent } from './modules/auth/views/register/register.component';
 import { HomeComponent } from './modules/general/views/home/home.component';
-import { DashboardComponent } from './modules/general/dashboard/dashboard.component';
+import { DashboardComponent } from './modules/general/views/dashboard/dashboard.component';
 
 const routes: Routes = [
   // { path: '', component: HomeComponent, title:'Home page' },
@@ -14,7 +14,7 @@ const routes: Routes = [
   {
     path: '', component: DashboardComponent,
     children: [
-      { path: '', loadChildren: () => import('./modules/general/dashboard/component.module').then(components => components.ComponentModule) }
+      { path: '', loadChildren: () => import('./modules/general/views/dashboard/component.module').then(components => components.ComponentModule) }
     ]
   },
   { path: '**', redirectTo:'login', pathMatch: 'full' }
