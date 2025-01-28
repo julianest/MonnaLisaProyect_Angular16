@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ServicesService } from 'src/app/services/services.service';
+import { AuthRequest } from 'src/app/models/request/auth-request.model';
+import { AuthService } from '../auth.service';
+import { ServiceResponse } from 'src/app/models/response/auth-response.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -8,32 +11,50 @@ import { ServicesService } from 'src/app/services/services.service';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-
   loginForm!: FormGroup;
 
-  constructor(private servicio: ServicesService, private formBuilder: FormBuilder) {
-    this.armarFormulario();
+  constructor(
+    private authService: AuthService,
+    private formBuilder: FormBuilder,
+    private router: Router
+  ) {
+    this.loginInitializeForm();
   }
 
-  armarFormulario() {
+  loginInitializeForm() {
     this.loginForm = this.formBuilder.group({
       inputEmail: ['', [Validators.required, Validators.email]],
-      inputPassword: ['', [Validators.required, Validators.minLength(6)]]
+      inputPassword: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
-  pruebaLogin() {
-
-    const params = {
-      url: '/login',
-      payload: {
-        email: String(this.loginForm.controls['inputEmail'].value),
-        password: String(this.loginForm.controls['inputPassword'].value)
-      }
+  submitLoginData() {
+    if (this.loginForm.invalid) {
+      console.error('Formulario inválido');
+      return;
     }
 
-    this.servicio.servicePost(params).subscribe((data) => {
-      console.log(data);
+    const credentials: AuthRequest = {
+      email: this.loginForm.controls['inputEmail'].value,
+      password: this.loginForm.controls['inputPassword'].value,
+    };
+
+    this.authService.login(credentials).subscribe({
+      next: (data: ServiceResponse) => {
+        switch (data.code) {
+          case 200:
+            localStorage.setItem('access_token', data.response.access_token);
+            this.router.navigateByUrl('/dashboard');
+            break;
+          default:
+            console.log('Error en el login');
+            break;
+        }
+        console.log('Login exitoso: ', data);
+      },
+      error: (error) => {
+        console.error('Error en el login: ', error);
+      },
     });
   }
 }

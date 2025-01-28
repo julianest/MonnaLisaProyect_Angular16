@@ -1,23 +1,32 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { envaironment } from "env";
+import { catchError, Observable, throwError } from "rxjs";
 
 @Injectable({
   providedIn: 'root',
 })
-export class ServicesService {
+export class ApiService {
   constructor(private http: HttpClient) { }
-  
-  servicePost(params: any) {
-    return this.http.post(envaironment.API_BASE_URL + params.url, params.payload, {
-      headers: {
-        'Content-Type': 'application/json, application/raw; charset=UTF-8',
-        'Authorization': 'Bearer'+ localStorage.getItem('token')
-      }
+
+  post<T, P>(url: string, payload: P): Observable<T> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
     });
+
+    return this.http.post<T>(`${envaironment.API_BASE_URL}${url}`, payload, { headers }).pipe(
+        catchError(this.handleError)
+      );
+  }
+  
+  get(params: any) {
+    return this.http.get(envaironment.API_BASE_URL + params.url, params.payload);
   }
 
-  serviceGet(params: any) {
-    return this.http.get(envaironment.API_BASE_URL + params.url, params.payload);
+
+  private handleError(error: any): Observable<never> {
+    console.error('HTTP Error:', error);
+    return throwError(() => new Error(error.message || 'Ocurrió un error en la API.'));
   }
 }
