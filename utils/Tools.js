@@ -1,13 +1,5 @@
 export const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-export function setupPasswordToggle (togglePassword, passwordInput) {
-  togglePassword.addEventListener('click', function () {
-    const type = passwordInput.type === 'password' ? 'text' : 'password'
-    passwordInput.type = type
-    togglePassword.textContent = type === 'password' ? '👁️' : '🙈'
-  })
-}
-
 export function showOnSpinner (loadingIndicator) {
   loadingIndicator.style.display = 'flex'
 }

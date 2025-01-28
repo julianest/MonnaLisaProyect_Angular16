@@ -1,20 +1,11 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
-    <!-- <link rel="stylesheet" href="/login/Login.css">
-  <link rel="stylesheet" href="/styles.css"> -->
-    <!-- <script src="/login/Login.js"  type="module"></script> -->
-<!-- 
-    <title>Login</title>
-  </head>
-  <body> -->
-    <div class="login-container">
-      <h1 style="text-align: center">PICASSO</h1>
-      <h2>¡Accede a tu cuenta!</h2>
-      <form [formGroup]="loginForm">
-        <div class="form-group">
+<div class="general-container">
+  <app-circular-menu></app-circular-menu>
+  <app-animated-background [circleColor]="'#1db954'" [numCircles]="15"></app-animated-background>
+  <div class="login-container">
+    <h1 style="text-align: center;">PICASSO</h1>
+    <h2>¡Accede a tu cuenta!</h2>
+    <form id="login-form" [formGroup]="loginForm">
+      <div class="form-group">
           <label for="username">Nombre de Usuario</label>
           <input 
           formControlName="inputEmail" 
@@ -30,11 +21,11 @@
           formControlName="inputPassword"
             type="password"
             id="password"
-            name="password"
+            name="password" #passwordInput
             placeholder="Ingrese su contraseña"
             required
           />
-          <span class="toggle-password" id="toggle-password">👁️</span>
+          <span class="toggle-password" id="toggle-password" appTogglePassword [targetInput]="passwordInput">👁️</span>
         </div>
         <div class="buttons">
           <button type="submit" class="button" id="login-button" (click)="submitLoginData()">
@@ -47,7 +38,7 @@
       </form>
       <p style="text-align: center; color: black; margin-top: 5%">
         ¿No tienes cuenta?
-        <a href="/register" id="register-link">¡Regístrate aquí!</a>
+        <a [routerLink]="['/register']" id="register-link">¡Regístrate aquí!</a>
       </p>
     </div>
     <div id="loading-indicator" style="display: none">
@@ -57,5 +48,4 @@
     <div id="response-overlay" style="display: none">
       <div id="response-contain-message" style="display: none"></div>
     </div>
-  <!-- </body>
-</html> -->
+</div>

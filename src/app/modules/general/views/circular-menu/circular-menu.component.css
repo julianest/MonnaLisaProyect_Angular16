@@ -1,0 +1,144 @@
+.semicircle-menu {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 150px;
+  background: #0eb916;
+  clip-path: ellipse(100% 50% at 0% 50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 10px;
+}
+
+.menu-button {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* Contenedor de los botones */
+.menu-items-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 70px; /* fuera del semicírculo */
+  transform: translateY(-50%); /* Inicialmente fuera de la vista (arriba) */
+  z-index: 1001;
+}
+
+/* Ocultar por defecto */
+.menu-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transform: scale(0); /* Reducir tamaño inicialmente */
+  transform-origin: left center;
+  transition: transform 0.4s ease;
+}
+
+.menu-items.active {
+  transform: scale(1); /* Mostrar los botones */
+}
+
+.menu-item {
+  width: 100px;
+  height: 40px;
+  background-color: #0eb916;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item:hover {
+  background-color: #666666;
+}
+
+/* Estilos para dispositivos pequeños */
+@media (max-width: 768px) {
+  .semicircle-menu {
+    width: 100%;
+    height: auto;
+    top: 0;
+    left: 0;
+    transform: none;
+    clip-path: none; /* Eliminar la forma de semicírculo */
+    background-color: #0eb916;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 0;
+  }
+
+  .menu-button {
+    position: static;
+    transform: none;
+    z-index: 1002;
+  }
+
+  .menu-items-wrapper {
+    position: absolute;
+    top: 22%;
+    left: 0;
+    width: 100%;
+    z-index: 1001; /* Por debajo del botón */
+  }
+
+  .menu-items {
+    width: 100%;
+    background-color: #0eb916;
+    padding-bottom: 10px;
+  }
+
+  .menu-items.active {
+    display: flex; /* Mostrar los elementos al activar el menú */
+    transform: translateY(0);
+  }
+
+  .menu-item {
+    width: 100%;
+    margin: 0;
+
+    color: white;
+    transition: background-color 0.3s ease; /* Suavizar cambios de color */
+    font-size: 14px;
+    left: 0;
+  }
+
+  .menu-item:hover {
+    background-color: #22e907;
+  }
+}
+
+/* Animación para el menú hamburguesa */
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menu-items.active {
+  display: flex;
+  animation: slide-down 0.3s ease;
+}
