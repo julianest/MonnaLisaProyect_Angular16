@@ -6,9 +6,7 @@ import { RegisterComponent } from './modules/auth/views/register/register.compon
 import { HomeComponent } from './modules/general/views/home/home.component';
 
 const routes: Routes = [
-  // { path: '', component: HomeComponent, title:'Home page' },
-  // { path: 'login', component: LoginComponent, title:'Login page' },
-  { path: '', component: LoginComponent, title:'Login page' },
+  { path: 'login', component: LoginComponent, title:'Login page' },
   { path: 'register', component: RegisterComponent,  title:'Register page' },
   { path: '**', redirectTo:'', pathMatch: 'full' }
 ];
