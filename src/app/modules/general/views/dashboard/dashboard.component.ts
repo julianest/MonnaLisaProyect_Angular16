@@ -11,7 +11,7 @@ export class DashboardComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-  
+
   }
 
   logOut() {
@@ -26,6 +26,9 @@ export class DashboardComponent implements OnInit {
         break;
       case 2:
         this.router.navigateByUrl('dashboard/retirar');
+        break;
+      case 3:
+        this.router.navigateByUrl('dashboard/registrar');
         break;
       default:
         this.router.navigateByUrl('dashboard/home');
