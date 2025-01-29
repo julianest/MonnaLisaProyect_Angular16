@@ -16,6 +16,7 @@ import { TogglePasswordDirective } from './shared/directives/toggle-password/tog
 import { DepositComponent } from './modules/general/views/deposit/deposit.component';
 import { WithdrawComponent } from './modules/general/views/withdraw/withdraw.component';
 import { SpinnerComponent } from './shared/components/spinner/spinner/spinner.component';
+import { RegisterAccountComponent } from './modules/general/views/register-account/register-account/register-account.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { SpinnerComponent } from './shared/components/spinner/spinner/spinner.co
     TogglePasswordDirective,
     DepositComponent,
     WithdrawComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    RegisterAccountComponent
   ],
   imports: [
     BrowserModule,
