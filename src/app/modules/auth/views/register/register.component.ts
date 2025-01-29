@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { RegisterRequest } from 'src/app/models/request/register-request.model';
-import { SpinnerService } from'src/app/services/spinner.service';
 import { Router } from '@angular/router';
+import { Alertas } from 'utils/alerts';
 
 @Component({
   selector: 'app-register',
@@ -19,8 +19,8 @@ export class RegisterComponent {
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
-    private spinnerService: SpinnerService,
-    private router: Router
+    private router: Router,
+    private alert: Alertas
   ) {
     this.registerInitializeForm();
   }
@@ -46,7 +46,7 @@ export class RegisterComponent {
         control.markAllAsTouched();
       });
     } else {
-      this.spinnerService.show();
+      this.alert.loading();
   
       const userData: RegisterRequest = {
         numeroIdetificacion: this.registerForm.controls['inputIdentificationNumber'].value,
@@ -59,16 +59,25 @@ export class RegisterComponent {
   
       this.authService.register(userData).subscribe({
         next: (response: any) => {
-          this.registerForm.reset();
-          this.router.navigateByUrl('/login');
-          console.log('Registro exitoso', response);
+          switch (response.code) {
+            case 200:
+              this.registerForm.reset();
+              this.alert.success("Usuario registrado", response.message);
+
+              setTimeout(() => {
+                this.router.navigateByUrl('/login');
+              }, 2000);
+              break;
+            case 400:
+              this.alert.warning("Advertencia", response.message);
+              break;
+            default:
+              this.alert.error("Error desconocido", "Por favor intentelo más tarde");
+              break;
+          }
         },
         error: (error) => {
-          this.spinnerService.hide(3000);
-          console.error('Error en el registro: ', error);
-        },
-        complete: () => {
-          this.spinnerService.hide(2000);
+          this.alert.error("Error desconocido", "Por favor intentelo más tarde, ERROR: " + error);
         }
       });
     }

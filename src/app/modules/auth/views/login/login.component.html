@@ -7,7 +7,7 @@
   <div class="login-container">
     <div class="row text-center">
       <div class="col-12">
-        <h2 class="m-0">BANK-PICASSO</h2>
+        <h2 class="m-0" style="color: #1DB954;"><b>BANK-PICASSO</b></h2>
       </div>
       <div class="col-12 mb-2">
         <small>¡Accede a tu cuenta!</small>
@@ -15,7 +15,7 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <form id="login-form" [formGroup]="loginForm" novalidate>
+        <form id="login-form" [formGroup]="loginForm" (ngSubmit)="submitLoginData()" novalidate>
           <div class="mb-3">
             <div class="input-group">
               <input
@@ -58,12 +58,7 @@
             </small>
           </div>      
           <div class="buttons">
-            <button
-              type="submit"
-              class="button"
-              id="login-button"
-              (click)="submitLoginData()"
-            >
+            <button type="submit" class="button" id="login-button">
               Iniciar Sesión
             </button>
             <button type="button" class="button cancel" id="cancel-button">
