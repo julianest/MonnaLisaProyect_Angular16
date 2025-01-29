@@ -15,6 +15,7 @@ import { NumberToTextPipe } from './shared/pipes/numberToText/number-to-text.pip
 import { TogglePasswordDirective } from './shared/directives/toggle-password/toggle-password.directive';
 import { DepositComponent } from './modules/general/views/deposit/deposit.component';
 import { WithdrawComponent } from './modules/general/views/withdraw/withdraw.component';
+import { SpinnerComponent } from './shared/components/spinner/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { WithdrawComponent } from './modules/general/views/withdraw/withdraw.com
     NumberToTextPipe,
     TogglePasswordDirective,
     DepositComponent,
-    WithdrawComponent
+    WithdrawComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,

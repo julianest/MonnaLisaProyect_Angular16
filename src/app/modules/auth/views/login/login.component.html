@@ -6,7 +6,7 @@
     <h2>¡Accede a tu cuenta!</h2>
     <form id="login-form" [formGroup]="loginForm" novalidate>
       <div class="form-group">
-          <label for="email">Correo</label>
+          <label for="email">Correo Electrónico</label>
           <input type="text" formControlName="inputEmail" id="email" placeholder="Ingrese el email" required/>
         </div>
         <!-- [class.is-invalid]="emailErroneo" <small *ngIf="emailErroneo" class="text-danger">
@@ -33,10 +33,6 @@
         ¿No tienes cuenta?
         <a [routerLink]="['/register']" id="register-link">¡Regístrate aquí!</a>
       </p>
-    </div>
-    <div id="loading-indicator" style="display: none">
-      <div class="spinner"></div>
-      <p>Cargando...</p>
     </div>
     <div id="response-overlay" style="display: none">
       <div id="response-contain-message" style="display: none"></div>
