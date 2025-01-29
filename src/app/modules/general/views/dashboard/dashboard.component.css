@@ -1,204 +1,232 @@
 /* Estilos Generales */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-  }
-  
-  body {
-    background-color: #f4f4f4;
-  }
-  
-  /* Contenedor Principal */
-  .dashboard-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
-  
-  /* Navbar */
-  .navbar {
-    background-color: #222;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .nav-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
-  
-  .menu-toggle {
-    background: none;
-    color: white;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-  }
-  
-  .user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .circle {
-    width: 15px;
-    height: 15px;
-    background-color: white;
-    border-radius: 50%;
-  }
-  
-  .logout-btn {
-    background: none;
-    color: white;
-    border: 1px solid white;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  /* Contenedor de Dashboard */
-  .dashboard-content {
-    display: flex;
-    flex: 1;
-    gap: 20px;
-    padding: 20px;
-    position: relative;
-  }
-  
-  /* Sidebar (comportamiento dinámico) */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #f4f4f4;
+}
+
+/* Contenedor Principal */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #4AC776;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.menu-toggle {
+  background: none;
+  color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.circle {
+  width: 15px;
+  height: 15px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.logout-btn {
+  background: none;
+  color: white;
+  border: 1px solid white;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Contenedor de Dashboard */
+.dashboard-content {
+  display: flex;
+  flex: 1;
+  gap: 20px;
+  padding: 20px;
+  position: relative;
+}
+
+/* Sidebar (comportamiento dinámico) */
+.sidebar {
+  background-color: #73da97;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 250px;
+  border-radius: 10px;
+  box-shadow: 4px 0px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.4s ease-in-out;
+}
+
+/* Sidebar fijo en pantallas grandes */
+@media (min-width: 768px) {
   .sidebar {
-    background-color: #333;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    min-width: 250px;
-    border-radius: 10px;
-    box-shadow: 4px 0px 8px rgba(0, 0, 0, 0.2);
+    position: static;
+    height: auto; /* Ajusta su altura según el contenido */
+  }
+
+  .menu-toggle {
+    display: none; /* Oculta el botón cuando el sidebar es visible */
+  }
+}
+
+/* Sidebar oculto en pantallas pequeñas */
+@media (max-width: 767px) {
+  .sidebar {
+    position: absolute;
+    left: -240px;
+    height: calc(
+      100vh - 60px - 70px
+    ); /* 100vh menos la altura del navbar y el footer */
+    max-height: 100%; /* Evita que sobrepase el footer */
+    z-index: 1000;
     transition: transform 0.4s ease-in-out;
+    overflow-y: auto; /* Permite desplazamiento si hay muchos elementos */
   }
-  
-  /* Sidebar fijo en pantallas grandes */
-    @media (min-width: 768px) {
-    .sidebar {
-      position: static;
-      height: auto; /* Ajusta su altura según el contenido */
-    }
-  
-    .menu-toggle {
-      display: none; /* Oculta el botón cuando el sidebar es visible */
-    }
+
+  .sidebar.open {
+    transform: translateX(250px);
   }
-  
-  /* Sidebar oculto en pantallas pequeñas */
-  @media (max-width: 767px) {
-    .sidebar {
-      position: absolute;
-      left: -240px;
-      height: calc(100vh - 60px - 70px); /* 100vh menos la altura del navbar y el footer */
-      max-height: 100%; /* Evita que sobrepase el footer */
-      z-index: 1000;
-      transition: transform 0.4s ease-in-out;
-      overflow-y: auto; /* Permite desplazamiento si hay muchos elementos */
-    }
-  
-    .sidebar.open {
-      transform: translateX(250px);
-    }
-  
-    .menu-toggle {
-      display: block; /* Muestra el botón solo en pantallas pequeñas */
-    }
+
+  .menu-toggle {
+    display: block; /* Muestra el botón solo en pantallas pequeñas */
   }
-  
-  /* Botones del Sidebar */
-  .action-btn {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    background-color: #444;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .action-btn:hover {
-    background-color: #555;
-  }
-  
-  /* Capa de fondo cuando el sidebar está activo */
-  .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    z-index: 999;
-  }
-  
-  .overlay.active {
-    display: block;
-  }
-  
-  /* Contenido Principal */
-  .main-card {
-    flex: 1;
-    padding: 20px;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  /* Cards */
-  .card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .balance-btn {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #222;
-    color: white;
-    border: none;
-    border-radius: 5px;
-  }
-  
-  /* Historial de Transacciones */
-  .transactions {
-    list-style: none;
-    padding: 10px 0;
-  }
-  
-  .transactions li {
-    padding: 5px 0;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  /* Footer */
-  .footer {
-    background-color: #222;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
+}
+
+/* Botones del Sidebar */
+.action-btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background-color: #74da98;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.action-btn:hover {
+  background-color: #30d76a;
+}
+
+/* Capa de fondo cuando el sidebar está activo */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  z-index: 999;
+}
+
+.overlay.active {
+  display: block;
+}
+
+/* Contenido Principal */
+.main-card {
+  flex: 1;
+  padding: 20px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Cards */
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.balance-btn {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #222;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+/* Historial de Transacciones */
+.transactions {
+  list-style: none;
+  padding: 10px 0;
+}
+
+.transactions li {
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Footer */
+.footer {
+  background-color: #4AC776;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Botón */
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.icon-button:hover {
+  background-color: #4AC776;
+}
+
+/* Estilos del Icono */
+.icon-button svg {
+  width: 20px;
+  height: 20px;
+  fill: white;
+}

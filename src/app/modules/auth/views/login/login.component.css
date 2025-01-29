@@ -64,6 +64,30 @@
   cursor: pointer;
 }
 
+.text-danger {
+  color: red;
+}
+
+.is-invalid {
+  border-color: #dc3545 !important; /* Rojo de error */
+  padding-right: calc(1.5em + 0.75rem);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='%23dc3545'%3e%3cpath d='M12 6A6 6 0 1 1 0 6a6 6 0 0 1 12 0ZM5.5 3.5a.5.5 0 0 1 1 0v3a.5.5 0 0 1-1 0v-3Zm.5 5a.65.65 0 0 1-.64-.63.65.65 0 0 1 .64-.64.65.65 0 0 1 .64.64.65.65 0 0 1-.64.63Z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.was-validated .form-control:invalid, 
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+.was-validated .form-control:invalid:focus, 
+.form-control.is-invalid:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+
 .buttons {
   display: flex;
   justify-content: space-between;

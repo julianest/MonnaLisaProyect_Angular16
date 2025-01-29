@@ -45,7 +45,7 @@ export class LoginComponent {
           case 200:
             localStorage.setItem('access_token', data.response.access_token);
             localStorage.setItem('id_user', String(data.response.id_user));
-            this.router.navigateByUrl('/dashboard');
+            this.router.navigateByUrl('dashboard/home');
             break;
           default:
             console.log('Error en el login');
@@ -57,5 +57,13 @@ export class LoginComponent {
         console.error('Error en el login: ', error);
       },
     });
+  }
+
+  get emailErroneo() {
+    return this.loginForm.get('inputEmail')?.invalid || this.loginForm.get('inputEmail')?.touched;
+  }
+
+  get passwordErroneo() {
+    return this.loginForm.get('inputPassword')?.invalid || this.loginForm.get('inputPassword')?.touched;
   }
 }
