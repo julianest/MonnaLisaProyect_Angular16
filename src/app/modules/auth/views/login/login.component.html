@@ -1,40 +1,86 @@
 <div class="general-container">
   <app-circular-menu></app-circular-menu>
-  <app-animated-background [circleColor]="'#1db954'" [numCircles]="15"></app-animated-background>
+  <app-animated-background
+    [circleColor]="'#1db954'"
+    [numCircles]="15"
+  ></app-animated-background>
   <div class="login-container">
-    <h1 style="text-align: center;">PICASSO</h1>
-    <h2>¡Accede a tu cuenta!</h2>
-    <form id="login-form" [formGroup]="loginForm" novalidate>
-      <div class="form-group">
-          <label for="email">Correo Electrónico</label>
-          <input type="text" formControlName="inputEmail" id="email" placeholder="Ingrese el email" required/>
-        </div>
-        <!-- [class.is-invalid]="emailErroneo" <small *ngIf="emailErroneo" class="text-danger">
-          Revisar el email del usuario
-        </small> -->
-        <div class="form-group">
-          <label for="password">Contraseña</label>
-          <input type="password" formControlName="inputPassword" id="password" #passwordInput placeholder="Ingrese su contraseña" required />
-          <!-- [class.is-invalid]="emailErroneo" <small *ngIf="passwordErroneo" class="text-danger">
-            Revisar la contraseña del usuario
-          </small> -->
-          <span class="toggle-password" id="toggle-password" appTogglePassword [targetInput]="passwordInput">👁️</span>
-        </div>
-        <div class="buttons">
-          <button type="submit" class="button" id="login-button" (click)="submitLoginData()">
-            Iniciar Sesión
-          </button>
-          <button type="button" class="button cancel" id="cancel-button">
-            Cancelar
-          </button>
-        </div>
-      </form>
-      <p style="text-align: center; color: black; margin-top: 5%">
-        ¿No tienes cuenta?
-        <a [routerLink]="['/register']" id="register-link">¡Regístrate aquí!</a>
-      </p>
+    <div class="row text-center">
+      <div class="col-12">
+        <h2 class="m-0">BANK-PICASSO</h2>
+      </div>
+      <div class="col-12 mb-2">
+        <small>¡Accede a tu cuenta!</small>
+      </div>
     </div>
-    <div id="response-overlay" style="display: none">
-      <div id="response-contain-message" style="display: none"></div>
+    <div class="row">
+      <div class="col-12">
+        <form id="login-form" [formGroup]="loginForm" novalidate>
+          <div class="mb-3">
+            <div class="input-group">
+              <input
+                type="text"
+                formControlName="inputEmail"
+                class="form-control"
+                placeholder="Ingrese el email"
+                [class.is-invalid]="emailErroneo"
+                required
+              />
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-user"></span>
+                </div>
+              </div>
+            </div>
+            <small *ngIf="emailErroneo" class="text-danger">
+              Revisar el email del usuario
+            </small>
+          </div>
+          <div class="mb-3">
+            <div class="input-group">
+              <input
+                [type]="show ? 'text' : 'password'"
+                formControlName="inputPassword"
+                class="form-control"
+                #passwordInput
+                [class.is-invalid]="passwordErroneo"
+                placeholder="Ingrese su contraseña"
+                required
+              />
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span (click)="viewPassword()" [ngClass]="show ? 'fas fa-eye-low-vision' : 'fas fa-eye'"></span>
+                </div>
+              </div>
+            </div>
+            <small *ngIf="passwordErroneo" class="text-danger">
+              Revisar la contraseña del usuario
+            </small>
+          </div>      
+          <div class="buttons">
+            <button
+              type="submit"
+              class="button"
+              id="login-button"
+              (click)="submitLoginData()"
+            >
+              Iniciar Sesión
+            </button>
+            <button type="button" class="button cancel" id="cancel-button">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="col-12">
+        <p style="text-align: center; color: black; margin-top: 5%">
+          ¿No tienes cuenta?
+          <a [routerLink]="['/register']" id="register-link">¡Regístrate aquí!</a>
+        </p>
+      </div>
     </div>
+  </div>
+  <div id="response-overlay" style="display: none">
+    <div id="response-contain-message" style="display: none"></div>
+  </div>
 </div>
