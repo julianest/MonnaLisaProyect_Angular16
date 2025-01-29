@@ -4,6 +4,7 @@ import { AuthRequest } from 'src/app/models/request/auth-request.model';
 import { AuthService } from '../auth.service';
 import { ServiceResponse } from 'src/app/models/response/auth-response.model';
 import { Router } from '@angular/router';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,8 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private spinnerService: SpinnerService,
   ) {
     this.loginInitializeForm();
   }
@@ -29,8 +31,12 @@ export class LoginComponent {
   }
 
   submitLoginData() {
+
+    this.spinnerService.show();
+
     if (this.loginForm.invalid) {
       console.error('Formulario inválido');
+      this.spinnerService.hide(1000);
       return;
     }
 
@@ -54,8 +60,12 @@ export class LoginComponent {
         console.log('Login exitoso: ', data);
       },
       error: (error) => {
+        this.spinnerService.hide(2000);
         console.error('Error en el login: ', error);
       },
+      complete: () => {
+        this.spinnerService.hide(2000);
+      }
     });
   }
 

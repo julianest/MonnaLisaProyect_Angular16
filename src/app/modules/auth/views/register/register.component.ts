@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { RegisterRequest } from 'src/app/models/request/register-request.model';
+import { SpinnerService } from'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-register',
@@ -13,7 +14,8 @@ export class RegisterComponent {
 
   constructor(
     private authService: AuthService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private spinnerService: SpinnerService,
   ) {
     this.registerInitializeForm();
   }
@@ -37,8 +39,12 @@ export class RegisterComponent {
   }
 
   submitRegisterData() {
+
+    this.spinnerService.show();
+
     if (this.registerForm.invalid) {
       console.error('Registro inválido');
+      this.spinnerService.hide(1000);
       return;
     }
 
@@ -57,8 +63,12 @@ export class RegisterComponent {
         console.log('Registro exitoso', response);
       },
       error: (error) => {
+        this.spinnerService.hide(3000);
         console.error('Error en el registro: ', error);
       },
+      complete: () => {
+        this.spinnerService.hide(2000);
+      }
     });
   }
 }
