@@ -64,10 +64,6 @@
   cursor: pointer;
 }
 
-.text-danger {
-  color: red;
-}
-
 .is-invalid {
   border-color: #dc3545 !important; /* Rojo de error */
   padding-right: calc(1.5em + 0.75rem);
