@@ -12,6 +12,7 @@ import { AnimatedBackgroundComponent } from './shared/components/animated-backgr
 import { CircularMenuComponent } from './modules/general/views/circular-menu/circular-menu.component';
 import { NumberToTextPipe } from './shared/pipes/numberToText/number-to-text.pipe';
 import { TogglePasswordDirective } from './shared/directives/toggle-password/toggle-password.directive';
+import { SpinnerComponent } from './shared/components/spinner/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { TogglePasswordDirective } from './shared/directives/toggle-password/tog
     AnimatedBackgroundComponent,
     CircularMenuComponent,
     NumberToTextPipe,
-    TogglePasswordDirective
+    TogglePasswordDirective,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
