@@ -8,5 +8,6 @@ export interface ServiceResponse {
     code: number;
     response: {
         access_token:string;
+        id_user: number;
     }
 }
