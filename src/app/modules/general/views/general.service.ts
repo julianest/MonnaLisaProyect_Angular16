@@ -12,7 +12,11 @@ export class GeneralService {
   constructor(private apiService: ApiService) {}
 
   registerAccount(accountData: registerAccountRequest): Observable<registerAccountResponse>{
-    return this.apiService.post<registerAccountResponse,registerAccountRequest >('/cuenta-bancaria/crear-cuenta', accountData);
+    return this.apiService.post<registerAccountResponse,registerAccountRequest >('cuenta-bancaria/crear-cuenta', accountData);
+  }
+
+  getInfoUser(url: any) {
+    return this.apiService.get("usuario/consultar/"+ url);
   }
 
 }
