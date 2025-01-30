@@ -44,12 +44,12 @@ export class LoginComponent {
       });
     } else {
       this.spinnerService.show();
-  
+
       const credentials: AuthRequest = {
         email: this.loginForm.controls['inputEmail'].value,
         password: this.loginForm.controls['inputPassword'].value,
       };
-  
+
       this.authService.login(credentials).subscribe({
         next: (data: ServiceResponse) => {
           switch (data.code) {
