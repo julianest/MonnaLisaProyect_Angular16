@@ -68,17 +68,14 @@ export class RegisterComponent {
                 this.router.navigateByUrl('/login');
               }, 2000);
               break;
-            case 400:
-              this.alert.warning("Advertencia", response.message);
-              break;
             default:
-              this.alert.error("Error desconocido", "Por favor intentelo más tarde");
-              break;
+                this.alert.error("No se pudo registrar el usuario", "Usuario no registrado, por favor revise la información, tener en cuenta que la contraseña son minimo 6 caracteres y un caracter especial");
+                break;
+            }
+          },
+          error: (error: any) => {
+            this.alert.error("Error desconocido", "Por favor intentelo más tarde");
           }
-        },
-        error: (error) => {
-          this.alert.error("Error desconocido", "Por favor intentelo más tarde, ERROR: " + error);
-        }
       });
     }
   }

@@ -66,16 +66,13 @@ export class LoginComponent {
                 this.router.navigateByUrl('dashboard/home');
               }, 2000);
               break;
-            case 400:
-              this.alert.warning("Advertencia", resp.message);
-              break;
             default:
-              this.alert.error("Error desconocido", "Por favor intentelo más tarde");
+              this.alert.error("No se pudo inciiar sesión", "Usuario no encontrado por favor revisar las credenciales");
               break;
           }
         },
         error: (error: any) => {
-          this.alert.error("Error desconocido", "Por favor intentelo más tarde, ERROR: " + error);
+          this.alert.error("Error desconocido", "Por favor intentelo más tarde");
         }
       });
     }
