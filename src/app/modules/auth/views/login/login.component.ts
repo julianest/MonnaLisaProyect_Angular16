@@ -5,6 +5,7 @@ import { AuthService } from '../auth.service';
 import { ServiceResponse } from 'src/app/models/response/auth-response.model';
 import { Router } from '@angular/router';
 import { SpinnerService } from 'src/app/services/spinner.service';
+import { Alertas } from 'utils/alerts';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,7 @@ export class LoginComponent {
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private spinnerService: SpinnerService,
+    private alert: Alertas
   ) {
     this.loginInitializeForm();
   }
@@ -43,7 +44,7 @@ export class LoginComponent {
         control.markAllAsTouched();
       });
     } else {
-      this.spinnerService.show();
+      this.alert.loading();
   
       const credentials: AuthRequest = {
         email: this.loginForm.controls['inputEmail'].value,
@@ -51,25 +52,27 @@ export class LoginComponent {
       };
   
       this.authService.login(credentials).subscribe({
-        next: (data: ServiceResponse) => {
-          switch (data.code) {
+        next: (resp: ServiceResponse) => {
+          switch (resp.code) {
             case 200:
-              localStorage.setItem('access_token', data.response.access_token);
-              localStorage.setItem('id_user', String(data.response.id_user));
-              this.router.navigateByUrl('dashboard/home');
+              localStorage.setItem('access_token', resp.response.access_token);
+              localStorage.setItem('id_user', String(resp.response.id_user));
+
+              this.alert.success("Usuario registrado", resp.message);
+              
+              this.loginForm.reset();
+              
+              setTimeout(() => {
+                this.router.navigateByUrl('dashboard/home');
+              }, 2000);
               break;
             default:
-              console.log('Error en el login');
+              this.alert.error("No se pudo inciiar sesión", "Usuario no encontrado por favor revisar las credenciales");
               break;
           }
-          console.log('Login exitoso: ', data);
         },
-        error: (error) => {
-          this.spinnerService.hide(2000);
-          console.error('Error en el login: ', error);
-        },
-        complete: () => {
-          this.spinnerService.hide(2000);
+        error: (error: any) => {
+          this.alert.error("Error desconocido", "Por favor intentelo más tarde");
         }
       });
     }

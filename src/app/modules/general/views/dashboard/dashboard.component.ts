@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { GeneralService } from '../general.service';
+import { Alertas } from 'utils/alerts';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,10 +10,13 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(private router: Router) {}
+  nameUser: string = "";
+  identificationnumber: string = "";
+
+  constructor(private router: Router, private services: GeneralService, private alert: Alertas) {}
 
   ngOnInit(): void {
-
+    this.getInformationuser();
   }
 
   logOut() {
@@ -34,6 +39,34 @@ export class DashboardComponent implements OnInit {
         this.router.navigateByUrl('dashboard/home');
         break;
     }
+  }
+
+  getInformationuser() {
+    this.alert.loading();
+
+    const url = String(localStorage.getItem('id_user'));
+    
+    this.services.getInfoUser(url).subscribe({
+      next: (resp: any) => {
+        console.log(resp);
+        switch(resp.code) {
+          case 200:
+            localStorage.setItem('nameUser', resp.response.nombre);
+            localStorage.setItem('identificationnumber', resp.response.numeroIdetificacion);
+
+            this.nameUser = String(localStorage.getItem('nameUser'));
+            this.identificationnumber = String(localStorage.getItem('identificationNumber'));
+            this.alert.cerrar();
+            break;
+          default:
+            this.alert.warning("Ocurrio un problema", resp.message);
+            break;
+        }
+      },
+      error: (error) => {
+        this.alert.warning("Ocurrio un error", error);
+      }
+    });
   }
 
   toggleSidebar() {
