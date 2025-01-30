@@ -15,6 +15,8 @@ export class DepositComponent {
   bankAccount: BankAccount[] = [];
   accountSelected!: number;
   amount!: number;
+  successMessage: string = '';
+  errorMessage: string = '';
 
   depositForm!: FormGroup;
 
@@ -53,7 +55,7 @@ export class DepositComponent {
 
   depositMoney() {
     if (this.depositForm.invalid) {
-      console.error('Formulario inválido');
+      this.errorMessage = 'Formulario inválido. Completa todos los campos.';
       return;
     }
 
@@ -64,11 +66,13 @@ export class DepositComponent {
 
     this.userService.depositTransaction(payload).subscribe({
       next: (response) => {
-        console.log('Depósito exitoso:', response);
+        this.successMessage = 'Depósito exitoso';
+        this.errorMessage = '';
         this.depositForm.reset();
       },
       error: (error) => {
-        console.error('Error en el depósito:', error);
+        this.errorMessage = 'Error en el depósito: ' + (error?.error?.message || 'Inténtalo nuevamente');
+        this.successMessage = '';
       }
     });
   }
