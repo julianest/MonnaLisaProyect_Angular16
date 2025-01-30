@@ -1,15 +1,25 @@
- <!-- Contenido Principal -->
- <main class="main-card">
-    <div class="card">
-      <h3>Depositar</h3>
+<main class="main-card">
+  <div class="">
+    <h3>Depósito Bancario</h3>
+  </div>
+
+  <form [formGroup]="depositForm">
+    <div>
+      <label for="account">Cuenta Bancaria:</label>
+      <select id="account" formControlName="inputAccount"  required>
+          <option *ngFor="let account of bankAccount" [value]="account.numeroCuenta">
+            {{ account.numeroCuenta }}
+          </option>
+      </select>
+    </div>
+    
+    <div>
+        <label for="amount">Monto a Depositar:</label>
+        <input type="number" id="amount" formControlName="inputDeposit">
     </div>
 
-    <div class="card">
-      <h3>Historial de deposito</h3>
-      <ul class="transactions">
-        <li>Transacción 1</li>
-        <li>Transacción 2</li>
-        <li>Transacción 3</li>
-      </ul>
+    <div>
+        <button type="button" (click)="depositMoney()">Depositar</button>
     </div>
-  </main>
+  </form>
+</main>
