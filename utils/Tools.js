@@ -1,21 +1,5 @@
 export const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-export function setupPasswordToggle (togglePassword, passwordInput) {
-  togglePassword.addEventListener('click', function () {
-    const type = passwordInput.type === 'password' ? 'text' : 'password'
-    passwordInput.type = type
-    togglePassword.textContent = type === 'password' ? '👁️' : '🙈'
-  })
-}
-
-export function showOnSpinner (loadingIndicator) {
-  loadingIndicator.style.display = 'flex'
-}
-
-export function showOffSpinner (loadingIndicator) {
-  loadingIndicator.style.display = 'none'
-}
-
 export function showErrorOrResponse (response, message, responseContainMessage, responseOverlayEtiq) {
   responseContainMessage.innerHTML =
     `<img src="/resources/${response}.jpg" alt="response" id="response-image">

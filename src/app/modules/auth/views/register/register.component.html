@@ -1,42 +1,132 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro</title>
-</head>
-<body>
-  <app-animated-background [circleColor]="'#1db954'" [numCircles]="15"></app-animated-background>
+<div class="general-container">
+  <!-- <app-circular-menu></app-circular-menu> -->
+  <app-animated-background
+    [circleColor]="'#1db954'"
+    [numCircles]="15"
+  ></app-animated-background>
   <div class="register-container">
-    <h1 style="text-align: center;">PICASSO</h1>
-    <h2>¡Crea tu cuenta!</h2>
-    <form id="register-form">
-      <div class="form-group">
-        <label for="username">Nombre de Usuario</label>
-        <input type="text" id="username" name="username" placeholder="Ingrese su nombre de usuario" required>
+    <div class="row text-center">
+      <div class="col-12">
+        <h2 class="m-0" style="color: #1DB954;"><b>BANK-PICASSO</b></h2>
       </div>
-      <div class="form-group">
-        <label for="email">Correo Electrónico:</label>
-        <input type="email" id="email" name="email" placeholder="Ingrese su correo electrónico" required />
+      <div class="col-12 mb-2">
+        <small>¡Registrate!</small>
       </div>
-      <div class="form-group">
-        <label for="password">Contraseña</label>
-        <input [type]="isPasswordVisible ? 'text' : 'password'" id="password" name="password" placeholder="Ingrese su contraseña" required>
-        <span class="toggle-password" id="toggle-password" (click)="togglePasswordVisibility()">👁️</span>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <form [formGroup]="registerForm" (ngSubmit)="submitRegisterData()">
+          <div class="mb-3">
+            <div class="input-group">
+              <input
+                type="text"
+                formControlName="inputIdentificationNumber"
+                class="form-control"
+                [class.is-invalid]="identificacionErronea"
+                placeholder="Ingrese su número de identificación"
+                required
+              />
+            </div>
+            <small *ngIf="identificacionErronea" class="text-danger">
+              Revisar el número de identificación
+            </small>
+          </div>
+          <div class="mb-3">
+            <div class="input-group">
+              <input
+                type="text"
+                formControlName="inputName"
+                class="form-control"
+                [class.is-invalid]="nombreErroneo"
+                placeholder="Ingrese su nombre de usuario"
+                required
+              />
+            </div>
+            <small *ngIf="nombreErroneo" class="text-danger">
+              Revisar el nombre del usuario
+            </small>
+          </div>
+          <div class="mb-3">
+            <div class="input-group">
+              <input
+                type="text"
+                formControlName="inputLastName"
+                class="form-control"
+                [class.is-invalid]="apellidoErroneo"
+                placeholder="Ingrese su apellido de usuario"
+                required
+              />
+            </div>
+            <small *ngIf="apellidoErroneo" class="text-danger">
+              Revisar el apellido del usuario
+            </small>
+          </div>
+          <div class="mb-3">
+            <div class="input-group">
+              <input
+                type="text"
+                formControlName="inputPhone"
+                class="form-control"
+                [class.is-invalid]="telefonoErroneo"
+                placeholder="Ingrese su número de celular"
+              />
+            </div>
+            <small *ngIf="telefonoErroneo" class="text-danger">
+              Revisar el número de celular
+            </small>
+          </div>
+          <div class="mb-3">
+            <div class="input-group">
+              <input
+                type="email"
+                formControlName="inputEmail"
+                class="form-control"
+                [class.is-invalid]="emailErroneo"
+                placeholder="Ingrese su correo electrónico"
+                required
+              />
+            </div>
+            <small *ngIf="emailErroneo" class="text-danger">
+              Revisar el correo electronico
+            </small>
+          </div>
+          <div class="mb-3">
+            <div class="input-group">
+              <input
+                [type]="show ? 'text' : 'password'"
+                formControlName="inputPassword"
+                class="form-control"
+                [class.is-invalid]="passwordErroneo"
+                placeholder="Ingrese su contraseña"
+                required
+              />
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span (click)="viewPassword()" [ngClass]="show ? 'fas fa-eye-low-vision' : 'fas fa-eye'"></span>
+                </div>
+              </div>
+            </div>
+            <small *ngIf="passwordErroneo" class="text-danger">
+              Revisar la contraseña
+            </small>
+          </div>
+          <div class="buttons">
+            <button type="submit" class="button">Registrar</button>
+            <button type="button" class="button cancel" id="cancel-button">
+              Cancelar
+            </button>
+          </div>
+        </form>
       </div>
-      <div class="buttons">
-        <button type="submit" class="button">Registrar</button>
-        <button type="button" class="button cancel" id="cancel-button">Cancelar</button>
+      <div class="col-12">
+        <p style="text-align: center; color: black; margin-top: 5%">
+          ¿Ya tienes cuenta?
+          <a [routerLink]="['/login']" id="register-link">¡Logueate!</a>
+        </p>
       </div>
-    </form>
-    <p style="text-align: center; color: black; margin-top: 5%;">¿Ya tienes cuenta? <a [routerLink]="['/']" id="register-link">¡Logueate!</a></p>
+    </div>
   </div>
-  <div id="loading-indicator" style="display: none;">
-    <div class="spinner"></div>
-    <p>Cargando...</p>
+  <div id="response-overlay" style="display: none">
+    <div id="response-contain-message" style="display: none"></div>
   </div>
-  <div id="response-overlay" style="display: none;">
-    <div id="response-contain-message" style="display: none;"></div>
 </div>
-</body>
-</html>
