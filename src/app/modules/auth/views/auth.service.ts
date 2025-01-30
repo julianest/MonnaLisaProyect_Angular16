@@ -12,10 +12,10 @@ export class AuthService {
   constructor(private apiService: ApiService) {}
 
   login(credentials: AuthRequest): Observable<ServiceResponse> {
-    return this.apiService.post<ServiceResponse, AuthRequest>('/auth/login', credentials);
+    return this.apiService.post<ServiceResponse, AuthRequest>('auth/login', credentials);
   }
 
   register(userData: RegisterRequest): Observable<AuthResponse>{
-    return this.apiService.post<AuthResponse, RegisterRequest>('/auth/register', userData);
+    return this.apiService.post<AuthResponse, RegisterRequest>('auth/register', userData);
   }
 }

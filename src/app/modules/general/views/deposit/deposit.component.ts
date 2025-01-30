@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserRequest } from 'src/app/models/request/user-request.model';
 import { BankAccount } from 'src/app/models/response/bankAccount-response.model';
-import { UserResponse } from 'src/app/models/response/user-response.model';
-import { UserService } from 'src/app/modules/general/views/general.service';
+import { GeneralService} from 'src/app/modules/general/views/general.service';
+import { Alertas } from 'utils/alerts';
 
 @Component({
   selector: 'app-deposit',
@@ -21,8 +21,9 @@ export class DepositComponent {
   depositForm!: FormGroup;
 
   constructor(
-    private userService: UserService,
-    private formBuilder: FormBuilder
+    private services: GeneralService,
+    private formBuilder: FormBuilder,
+    private alert: Alertas
   ) {
     this.depositInitializeForm();
   }
@@ -39,17 +40,38 @@ export class DepositComponent {
   }
 
   getAccountById() {
-    const userRequest: UserRequest = { numeroIdetificacion: String(localStorage.getItem('id_user')) };
-    this.userService.getBankAccountsById(userRequest).subscribe({
-      next: (data: any) => {
-        data.response.cuentasBancarias.forEach((element: any) =>{
-          this.bankAccount.push(element)
-        })
-        console.log(this.bankAccount);
+    // const userRequest: UserRequest = { numeroIdetificacion: String(localStorage.getItem('id_user')) };
+    // this.services.getBankAccountsById(userRequest).subscribe({
+    //   next: (data: any) => {
+    //     data.response.cuentasBancarias.forEach((element: any) =>{
+    //       this.bankAccount.push(element)
+    //     })
+    //     console.log(this.bankAccount);
+    //   },
+    //   error: (error) => {
+    //     console.error('Error al obtener las cuentas bancarias', error);
+    //   }
+    // });
+
+    const url = String(localStorage.getItem('id_user'));
+    this.services.getInfoUser(url).subscribe({
+      next: (resp: any) => {
+        // console.log(resp);
+        switch(resp.code) {
+          case 200:
+            resp.response.cuentasBancarias.forEach((element: any) =>{
+              this.bankAccount.push(element)
+            })
+            this.alert.cerrar();
+            break;
+          default:
+            this.alert.warning("Ocurrio un problema", resp.message);
+            break;
+        }
       },
-      error: (error) => {
-        console.error('Error al obtener las cuentas bancarias', error);
-      },
+      error: (error: any) => {
+        this.alert.warning("Ocurrio un error", error);
+      }
     });
   }
 
@@ -64,7 +86,7 @@ export class DepositComponent {
       monto: Number(this.depositForm.value.inputDeposit)
     };
 
-    this.userService.depositTransaction(payload).subscribe({
+    this.services.depositTransaction(payload).subscribe({
       next: (response) => {
         this.successMessage = 'Depósito exitoso';
         this.errorMessage = '';

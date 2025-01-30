@@ -1,0 +1,104 @@
+<div class="d-flex justify-content-center align-items-center">
+  <div class="p-4 shadow-lg border rounded bg-white" style="max-width: 800px; width: 100%;">
+
+    <h3 class="text-center text-success fw-bold mb-4">Registra tu cuenta Bancaria</h3>
+
+    <form id="login-form" [formGroup]="registerAccountForm" novalidate>
+
+      <div class="row g-3">
+
+        <!-- <div class="col-md-6">
+          <div class="p-3 shadow-sm border rounded bg-white">
+            <label class="form-label text-success fw-bold">Número de Cuenta</label>
+            <input
+              type="text"
+              formControlName="inputNumberAccount"
+              class="form-control border-success"
+              placeholder="Ingrese el número de cuenta"
+              [class.is-invalid]="numberAccountWrong"
+              required
+            />
+            <small *ngIf="numberAccountWrong" class="text-danger">Revisar la cuenta bancaria del usuario</small>
+          </div>
+        </div> -->
+
+        <div class="col-md-6">
+          <div class="p-3 shadow-sm border rounded bg-white">
+            <label class="form-label text-success fw-bold">Saldo de la Cuenta</label>
+            <input
+              type="text"
+              formControlName="inputBalance"
+              class="form-control border-success"
+              placeholder="Ingrese el saldo de la cuenta"
+              [class.is-invalid]="balanceWrong"
+              required
+            />
+            <small *ngIf="balanceWrong" class="text-danger">Revisar el saldo de la cuenta.</small>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="p-3 shadow-sm border rounded bg-white">
+            <label class="form-label text-success fw-bold">Tipo de Cuenta</label>
+            <input
+              type="text"
+              formControlName="inputTypeAccount"
+              class="form-control border-success"
+              placeholder="Ingrese el tipo de la cuenta"
+              [class.is-invalid]="typeAccountWrong"
+              required
+            />
+            <small *ngIf="typeAccountWrong" class="text-danger">Revisar el tipo de la cuenta.</small>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="p-3 shadow-sm border rounded bg-white">
+            <label class="form-label text-success fw-bold">Número de Identificación</label>
+            <input
+              type="text"
+              formControlName="inputNumberIdentification"
+              class="form-control border-success"
+              placeholder="Ingrese el número de identificación"
+              [class.is-invalid]="numberIdentificationWrong"
+              required
+            />
+            <small *ngIf="numberIdentificationWrong" class="text-danger">Revisar la identificación del propietario de cuenta.</small>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="d-flex justify-content-between mt-4 px-3">
+        <button
+          type="submit"
+          class="btn btn-success px-4 py-2"
+          id="login-button"
+          (click)="submitAccountinData()"
+        >
+          Grabar Cuenta
+        </button>
+        <button type="button" class="btn btn-outline-dark px-4 py-2" id="cancel-button">
+          Cancelar
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<div *ngIf="accountSuccess" class="mt-4 d-flex justify-content-center">
+  <div class="p-3 shadow-lg border rounded bg-white text-center" style="max-width: 600px; width: 100%;">
+    <h5 class="text-success fw-bold">¡Cuenta Creada Exitosamente!</h5>
+    <p class="text-dark">
+      El usuario identificado con el número de identificación
+      <span class="fw-bold text-success">{{ numberIdentification }}</span>
+      acaba de crear la cuenta número
+      <span class="fw-bold text-success">{{ numberAccount }}</span> exitosamente.
+      con un saldo de
+      <span class="fw-bold text-success">$ {{ balance | currency:'COP':'symbol' }} {{ balance | numberToText }}</span> exitosamente.
+    </p>
+  </div>
+</div>
+
