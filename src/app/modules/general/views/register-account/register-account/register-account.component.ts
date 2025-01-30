@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { registerAccountRequest } from 'src/app/models/request/registerAccount-request.model';
 import { SpinnerService } from 'src/app/services/spinner.service';
 import { GeneralService } from '../../general.service';
@@ -15,6 +14,7 @@ export class RegisterAccountComponent {
 
 
   registerAccountForm!: FormGroup;
+  accountTypes: string[] = ['AHORROS', 'CORRIENTE'];
 
   accountSuccess: boolean = false;
   numberIdentification!: String;
@@ -25,7 +25,6 @@ export class RegisterAccountComponent {
 constructor(
     private generalService: GeneralService,
     private formBuilder: FormBuilder,
-    private router: Router,
     private spinnerService: SpinnerService,
   ) {
     this.registerAccountInitializeForm();
@@ -34,17 +33,19 @@ constructor(
 
 registerAccountInitializeForm() {
     this.registerAccountForm = this.formBuilder.group({
-      // inputNumberAccount: ['', [Validators.required, Validators.maxLength(8)]],
       inputBalance: ['', [Validators.required, Validators.maxLength(8)]],
-      inputTypeAccount: ['', [Validators.required, Validators.maxLength(8)]],
+      inputTypeAccount: ['', [Validators.required]],
       inputNumberIdentification: ['', [Validators.required, Validators.maxLength(8)]],
     });
   }
 
   submitAccountinData() {
     if (this.registerAccountForm.invalid) {
+      console.log('Valor de tipoCuenta:', this.registerAccountForm.controls['inputTypeAccount'].value);
+
       return Object.values(this.registerAccountForm.controls).forEach(control => {
         control.markAllAsTouched();
+        control.updateValueAndValidity();
       });
     } else {
       this.spinnerService.show();
@@ -62,7 +63,7 @@ registerAccountInitializeForm() {
               this.accountSuccess = true;
               this.message = data.message;
               this.numberAccount = data.response.numeroCuenta;
-              this.numberIdentification = accountData.numeroIdetificacion;
+              this.numberIdentification = localStorage.getItem('identificationNumber') || '';
               this.balance = accountData.saldo;
               break;
             default:
@@ -82,19 +83,14 @@ registerAccountInitializeForm() {
     }
   }
 
-  // get numberAccountWrong() {
-  //   return this.registerAccountForm.get('inputEmail')?.invalid && this.registerAccountForm.get('inputEmail')?.touched;
-  // }
-
   get balanceWrong() {
-    return this.registerAccountForm.get('inputBalance')?.invalid && this.registerAccountForm.get('inputBalance')?.touched;
+    const control =this.registerAccountForm.get('inputBalance');
+    return control?.invalid && control?.touched;
   }
 
   get typeAccountWrong() {
-    return this.registerAccountForm.get('inputTypeAccount')?.invalid && this.registerAccountForm.get('inputTypeAccount')?.touched;
+    const control = this.registerAccountForm.get('inputTypeAccount');
+    return control?.invalid && (control?.touched|| control?.dirty);
   }
 
-  get numberIdentificationWrong() {
-    return this.registerAccountForm.get('inputNumberIdentification')?.invalid && this.registerAccountForm.get('inputNumberIdentification')?.touched;
-  }
 }

@@ -7,21 +7,6 @@
 
       <div class="row g-3">
 
-        <!-- <div class="col-md-6">
-          <div class="p-3 shadow-sm border rounded bg-white">
-            <label class="form-label text-success fw-bold">Número de Cuenta</label>
-            <input
-              type="text"
-              formControlName="inputNumberAccount"
-              class="form-control border-success"
-              placeholder="Ingrese el número de cuenta"
-              [class.is-invalid]="numberAccountWrong"
-              required
-            />
-            <small *ngIf="numberAccountWrong" class="text-danger">Revisar la cuenta bancaria del usuario</small>
-          </div>
-        </div> -->
-
         <div class="col-md-6">
           <div class="p-3 shadow-sm border rounded bg-white">
             <label class="form-label text-success fw-bold">Saldo de la Cuenta</label>
@@ -40,30 +25,18 @@
         <div class="col-md-6">
           <div class="p-3 shadow-sm border rounded bg-white">
             <label class="form-label text-success fw-bold">Tipo de Cuenta</label>
-            <input
-              type="text"
+            <select
               formControlName="inputTypeAccount"
               class="form-control border-success"
-              placeholder="Ingrese el tipo de la cuenta"
               [class.is-invalid]="typeAccountWrong"
               required
-            />
+            >
+              <option value="" disabled>Seleccione un tipo de cuenta</option>
+              <option *ngFor="let type of accountTypes" [value]="type">
+                {{ type }}
+              </option>
+            </select>
             <small *ngIf="typeAccountWrong" class="text-danger">Revisar el tipo de la cuenta.</small>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="p-3 shadow-sm border rounded bg-white">
-            <label class="form-label text-success fw-bold">Número de Identificación</label>
-            <input
-              type="text"
-              formControlName="inputNumberIdentification"
-              class="form-control border-success"
-              placeholder="Ingrese el número de identificación"
-              [class.is-invalid]="numberIdentificationWrong"
-              required
-            />
-            <small *ngIf="numberIdentificationWrong" class="text-danger">Revisar la identificación del propietario de cuenta.</small>
           </div>
         </div>
 
@@ -97,7 +70,7 @@
       acaba de crear la cuenta número
       <span class="fw-bold text-success">{{ numberAccount }}</span> exitosamente.
       con un saldo de
-      <span class="fw-bold text-success">$ {{ balance | currency:'COP':'symbol' }} {{ balance | numberToText }}</span> exitosamente.
+      <span class="fw-bold text-success">$ {{ balance | currency:'COP':'true' }} {{ balance | numberToText }}</span> exitosamente.
     </p>
   </div>
 </div>
