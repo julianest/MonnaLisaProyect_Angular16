@@ -7,7 +7,7 @@
   <div class="login-container">
     <div class="row text-center">
       <div class="col-12">
-        <h2 class="m-0" style="color: #1DB954;"><b>BANK-PICASSO</b></h2>
+        <h2 class="text-center text-success fw-bold m-0"><b>BANK-PICASSO</b></h2>
       </div>
       <div class="col-12 mb-2">
         <small>¡Accede a tu cuenta!</small>
@@ -61,7 +61,7 @@
             <button type="submit" class="button" id="login-button">
               Iniciar Sesión
             </button>
-            <button type="button" class="button cancel" id="cancel-button">
+            <button type="button" (click)="resetForm()" class="button cancel" id="cancel-button">
               Cancelar
             </button>
           </div>

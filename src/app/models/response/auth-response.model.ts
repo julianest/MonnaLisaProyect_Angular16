@@ -9,5 +9,6 @@ export interface ServiceResponse {
     response: {
         access_token:string;
         id_user: number;
+        identificationUser: string;
     }
 }
