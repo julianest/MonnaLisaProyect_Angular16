@@ -14,13 +14,12 @@ export class ApiService {
   constructor(private http: HttpClient) {}
   
   post<T, P>(url: string, payload: P): Observable<T> {
-    
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
     if (url === 'auth/login' || url === 'auth/register') {
       this.baseUrl = environment.API_BASE_URL_BACK;
     } else {
-      if (url.startsWith('transacciones/deposito')) {
+      if (url.startsWith('transacciones/deposito') || url.startsWith('transacciones/retiro')) {
         this.baseUrl = environment.API_BASE_URL_REACTOR;
       } else {
         this.baseUrl = environment.API_BASE_URL_BACK;
@@ -28,7 +27,7 @@ export class ApiService {
       
       headers = headers.set(
         'Authorization',
-        `Bearer ${localStorage.getItem('access_token') || ''}`
+        String(localStorage.getItem('access_token')),
       );
     }
 

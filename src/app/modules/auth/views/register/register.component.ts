@@ -80,6 +80,10 @@ export class RegisterComponent {
     }
   }
 
+  resetForm() {
+    this.registerForm.reset();
+  }
+
   get identificacionErronea() {
     return this.registerForm.get('inputIdentificationNumber')?.invalid && this.registerForm.get('inputIdentificationNumber')?.touched;
   }

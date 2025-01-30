@@ -77,6 +77,10 @@ export class LoginComponent {
     }
   }
 
+  resetForm() {
+    this.loginForm.reset();
+  }
+
   get emailErroneo() {
     return this.loginForm.get('inputEmail')?.invalid && this.loginForm.get('inputEmail')?.touched;
   }

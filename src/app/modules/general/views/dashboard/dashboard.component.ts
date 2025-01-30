@@ -29,6 +29,9 @@ export class DashboardComponent implements OnInit {
 
   redireccionar(opcion: number) {
     switch (opcion) {
+      case 0:
+        this.router.navigateByUrl('dashboard/home');
+        break;
       case 1:
         this.router.navigateByUrl('dashboard/depositar');
         break;
