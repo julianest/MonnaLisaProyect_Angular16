@@ -7,7 +7,7 @@
 
       <div class="row g-3">
 
-        <div class="col-md-6">
+        <!-- <div class="col-md-6">
           <div class="p-3 shadow-sm border rounded bg-white">
             <label class="form-label text-success fw-bold">Número de Cuenta</label>
             <input
@@ -20,7 +20,7 @@
             />
             <small *ngIf="numberAccountWrong" class="text-danger">Revisar la cuenta bancaria del usuario</small>
           </div>
-        </div>
+        </div> -->
 
         <div class="col-md-6">
           <div class="p-3 shadow-sm border rounded bg-white">
@@ -87,3 +87,18 @@
 
   </div>
 </div>
+
+<div *ngIf="accountSuccess" class="mt-4 d-flex justify-content-center">
+  <div class="p-3 shadow-lg border rounded bg-white text-center" style="max-width: 600px; width: 100%;">
+    <h5 class="text-success fw-bold">¡Cuenta Creada Exitosamente!</h5>
+    <p class="text-dark">
+      El usuario identificado con el número de identificación
+      <span class="fw-bold text-success">{{ numberIdentification }}</span>
+      acaba de crear la cuenta número
+      <span class="fw-bold text-success">{{ numberAccount }}</span> exitosamente.
+      con un saldo de
+      <span class="fw-bold text-success">$ {{ balance | currency:'COP':'symbol' }} {{ balance | numberToText }}</span> exitosamente.
+    </p>
+  </div>
+</div>
+

@@ -4,7 +4,6 @@ import { AuthRequest } from 'src/app/models/request/auth-request.model';
 import { AuthService } from '../auth.service';
 import { ServiceResponse } from 'src/app/models/response/auth-response.model';
 import { Router } from '@angular/router';
-import { SpinnerService } from 'src/app/services/spinner.service';
 import { Alertas } from 'utils/alerts';
 
 @Component({
@@ -45,12 +44,12 @@ export class LoginComponent {
       });
     } else {
       this.alert.loading();
-  
+
       const credentials: AuthRequest = {
         email: this.loginForm.controls['inputEmail'].value,
         password: this.loginForm.controls['inputPassword'].value,
       };
-  
+
       this.authService.login(credentials).subscribe({
         next: (resp: ServiceResponse) => {
           switch (resp.code) {
@@ -59,9 +58,9 @@ export class LoginComponent {
               localStorage.setItem('id_user', String(resp.response.id_user));
 
               this.alert.success("Usuario registrado", resp.message);
-              
+
               this.loginForm.reset();
-              
+
               setTimeout(() => {
                 this.router.navigateByUrl('dashboard/home');
               }, 2000);

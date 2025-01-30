@@ -7,7 +7,7 @@ import { LoginComponent } from './modules/auth/views/login/login.component';
 import { RegisterComponent } from './modules/auth/views/register/register.component';
 import { HomeComponent } from './modules/general/views/home/home.component';
 import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './modules/general/views/dashboard/dashboard.component';
 import { AnimatedBackgroundComponent } from './shared/components/animated-background/animated-background.component';
 import { CircularMenuComponent } from './modules/general/views/circular-menu/circular-menu.component';
@@ -38,7 +38,8 @@ import { RegisterAccountComponent } from './modules/general/views/register-accou
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
