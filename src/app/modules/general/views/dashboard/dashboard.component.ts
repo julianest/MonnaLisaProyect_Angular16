@@ -48,11 +48,11 @@ export class DashboardComponent implements OnInit {
     
     this.services.getInfoUser(url).subscribe({
       next: (resp: any) => {
-        console.log(resp);
+        // console.log(resp);
         switch(resp.code) {
           case 200:
             localStorage.setItem('nameUser', resp.response.nombre);
-            localStorage.setItem('identificationnumber', resp.response.numeroIdetificacion);
+            localStorage.setItem('identificationNumber', resp.response.numeroIdetificacion);
 
             this.nameUser = String(localStorage.getItem('nameUser'));
             this.identificationnumber = String(localStorage.getItem('identificationNumber'));
