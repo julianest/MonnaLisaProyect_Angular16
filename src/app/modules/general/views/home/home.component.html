@@ -1,16 +1,64 @@
- <!-- Contenido Principal -->
- <main class="main-card">
-    <div class="card">
-      <h3>Resumen de la cuenta</h3>
-      <button class="balance-btn">Saldo Disponible</button>
+<div class="card">
+  <div class="row">
+    <div class="col-12">
+      <h3 class="text-center text-success fw-bold">Resumen de la cuenta</h3>
     </div>
-
-    <div class="card">
-      <h3>Historial de transacciones</h3>
-      <ul class="transactions">
-        <li>Transacción 1</li>
-        <li>Transacción 2</li>
-        <li>Transacción 3</li>
-      </ul>
+    <hr />
+    <div class="col-12">
+      <div class="row">
+        <div class="col-6">
+          <label for=""><b>Saldo Actual: {{ saldoActual }}</b></label>
+        </div>
+      </div>
     </div>
-  </main>
+    <div class="col-12">
+      <form [formGroup]="homeFilterForm" (ngSubmit)="homeFilter()">
+        <div class="mb-3">
+          <div class="row">
+            <div class="col-9">
+              <div class="form-group">
+                <label for="account">Cuenta Bancaria:</label>
+                <select
+                  id="account"
+                  formControlName="inputAccount"
+                  class="form-control"
+                  required
+                >
+                  <option
+                    *ngFor="let account of bankAccount"
+                    [value]="account.numeroCuenta"
+                  >
+                    {{ account.numeroCuenta }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-3 mt-4">
+              <button type="submit" class="btn btn-success">Buscar</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-12">
+      <div class="table-responsive">
+        <table class="table table-sm table-head-fixed text-nowrap">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Fecha</th>
+              <th>Monto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of transactionResponse" class="text-center">
+              <td>{{ item.tipoMovimiento }}</td>
+              <td>{{ item.fechaMovimiento }}</td>
+              <td>{{ item.monto }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,32 +1,41 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { envaironment } from 'env';
+import { environment } from 'env';
 import { catchError, Observable, of, throwError } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
+
+  baseUrl: string = "";
+
   constructor(private http: HttpClient) {}
-
+  
   post<T, P>(url: string, payload: P): Observable<T> {
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-
-
-    if(url == "/login" || url == "/register") {
-      return this.http.post<T>(`${envaironment.API_BASE_URL_BACK}${url}`, payload)
-        .pipe(catchError(this.handleError)
-      );
+    if (url === 'auth/login' || url === 'auth/register') {
+      this.baseUrl = environment.API_BASE_URL_BACK;
     } else {
-      const headers = new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('access_token') || ''}`,
-      });
-      return this.http.post<T>(`${envaironment.API_BASE_URL_BACK}${url}`, payload, { headers })
-        .pipe(catchError(this.handleError)
+      if (url.startsWith('transacciones/deposito') || url.startsWith('transacciones/retiro')) {
+        this.baseUrl = environment.API_BASE_URL_REACTOR;
+      } else {
+        this.baseUrl = environment.API_BASE_URL_BACK;
+      }
+      
+      headers = headers.set(
+        'Authorization',
+        String(localStorage.getItem('access_token')),
       );
     }
+
+    return this.http
+      .post<T>(`${this.baseUrl}${url}`, payload, { headers })
+      .pipe(catchError(this.handleError));
   }
+
 
   get(params: any) {
     const headers = new HttpHeaders({
@@ -35,7 +44,7 @@ export class ApiService {
       Authorization: `Bearer ${localStorage.getItem('access_token') || ''}`,
     });
 
-    const url = envaironment.API_BASE_URL_BACK + params;
+    const url = environment.API_BASE_URL_BACK + params;
 
     return this.http.get(url, {
       headers,
@@ -43,7 +52,7 @@ export class ApiService {
   }
 
   private handleError(error: any): Observable<never> {
-    // console.error('HTTP Error:', error);
+    
     return throwError(
       () => new Error(error.message || 'Ocurrió un error en la API.')
     );
