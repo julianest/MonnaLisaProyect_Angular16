@@ -50,7 +50,7 @@ registerAccountInitializeForm() {
       this.spinnerService.show();
 
       const accountData: registerAccountRequest = {
-        saldo: this.registerAccountForm.controls['inputBalance'].value,
+        saldo: Number(this.registerAccountForm.controls['inputBalance'].value),
         tipoCuenta: this.registerAccountForm.controls['inputTypeAccount'].value,
         numeroIdetificacion: this.registerAccountForm.controls['inputNumberIdentification'].value,
       };

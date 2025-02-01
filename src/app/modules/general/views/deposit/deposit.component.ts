@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserRequest } from 'src/app/models/request/user-request.model';
 import { BankAccount } from 'src/app/models/response/bankAccount-response.model';
 import { GeneralService} from 'src/app/modules/general/views/general.service';
+import { StreamNotificationService } from 'src/app/services/stream-notification.service';
 import { Alertas } from 'utils/alerts';
 
 @Component({
@@ -12,6 +13,11 @@ import { Alertas } from 'utils/alerts';
 })
 export class DepositComponent {
 
+  balanceToast: number = 0;
+  dateToast: string = "";
+  statusToast: string = "";
+  typeToast: string = "";
+
   bankAccount: BankAccount[] = [];
 
   depositForm!: FormGroup;
@@ -19,7 +25,8 @@ export class DepositComponent {
   constructor(
     private services: GeneralService,
     private formBuilder: FormBuilder,
-    private alert: Alertas
+    private alert: Alertas,
+    private streamNotificaction: StreamNotificationService
   ) {
     this.depositInitializeForm();
   }
@@ -64,7 +71,7 @@ export class DepositComponent {
         control.markAllAsTouched();
       });
     } else {
-      this.alert.loading();
+      // this.alert.loading();
       
       const payload = {
         numeroCuenta: Number(this.depositForm.value.inputAccount),
@@ -76,7 +83,9 @@ export class DepositComponent {
           switch(resp.code) {
             case 200:
               this.depositForm.reset();
-              this.alert.success("Depósito exitoso", resp.message);
+              localStorage.setItem('numberAccount', String(payload.numeroCuenta));
+              this.streamNotificationTransaction();
+              // this.alert.success("Depósito exitoso", resp.message);
               break;
             default:
               this.alert.warning("Ocurrio un problema", "por favor revisar la información del deposito");
@@ -89,5 +98,20 @@ export class DepositComponent {
       });
     }
 
+  }
+
+  streamNotificationTransaction() {
+    this.streamNotificaction.getStreamTransactionNotifications().subscribe({
+      next: (transaction: any) => {
+        if (!transaction) return;
+        console.log(transaction);        
+        // this.currentBalance = transaction.finalBalance;
+        this.balanceToast = transaction.monto;
+        this.dateToast = transaction.fecha;
+        this.statusToast = transaction.estado;
+        this.typeToast = transaction.tipoTransaccion;
+      },
+      error: (error) => console.error('Error en el stream:', error)
+    });
   }
 }

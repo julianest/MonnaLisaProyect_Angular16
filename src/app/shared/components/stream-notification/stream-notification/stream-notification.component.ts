@@ -9,6 +9,7 @@ import { StreamNotificationService } from 'src/app/services/stream-notification.
 export class StreamNotificationComponent {
   @Input() amount: number = 0;
   @Input() date: string = '';
+  @Input() status: string = '';
   @Input() type: string = '';
   transactions: any[] = [];
 
@@ -18,10 +19,17 @@ export class StreamNotificationComponent {
     this.streamNotificationService.getStreamTransactionNotifications().subscribe({
       next: (transaction) => {
         if (!transaction) return;
-        this.transactions.unshift(transaction);
-      //   setTimeout(() => {
-      //     this.transactions.pop();
-      // }, 5000);
+        console.log(transaction);
+
+        this.amount = transaction.monto;
+        this.date = transaction.fecha;
+        this.status = transaction.estado;
+        this.type = transaction.tipoTransaccion;
+        
+        // this.transactions.unshift(transaction);
+        setTimeout(() => {
+          this.transactions.pop();
+      }, 4000);
     },
     error: (error) => console.log('Error en el stream', error)
     })

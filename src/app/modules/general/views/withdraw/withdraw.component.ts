@@ -74,6 +74,7 @@ export class WithdrawComponent implements OnInit {
           switch (resp.code) {
             case 200:
               this.withdrawForm.reset();
+              localStorage.setItem('numberAccount', String(payload.numeroCuenta));
               this.alert.success('Retiro exitoso', resp.message);
               break;
             default:

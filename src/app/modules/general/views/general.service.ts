@@ -31,8 +31,8 @@ export class GeneralService {
     return this.apiService.post<any, DepositRequest>('transacciones/retiro', payload);
   }
 
-  registerAccount(accountData: registerAccountRequest): Observable<registerAccountResponse>{
-    return this.apiService.post<registerAccountResponse,registerAccountRequest >('cuenta-bancaria/crear-cuenta', accountData);
+  registerAccount(accountData: registerAccountRequest): Observable<any>{
+    return this.apiService.post('cuenta-bancaria/crear-cuenta', accountData);
   }
 
   getInfoUser(url: any) {
