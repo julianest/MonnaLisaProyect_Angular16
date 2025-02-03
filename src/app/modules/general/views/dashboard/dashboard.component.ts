@@ -58,15 +58,10 @@ export class DashboardComponent implements OnInit {
         switch (resp.code) {
           case 200:
             localStorage.setItem('nameUser', resp.response.nombre);
-            localStorage.setItem(
-              'identificationNumber',
-              resp.response.numeroIdetificacion
-            );
+            localStorage.setItem('identificationNumber', resp.response.numeroIdetificacion);
 
             this.nameUser = String(localStorage.getItem('nameUser'));
-            this.identificationnumber = String(
-              localStorage.getItem('identificationNumber')
-            );
+            this.identificationnumber = String(localStorage.getItem('identificationNumber'));
             this.alert.cerrar();
             break;
           default:

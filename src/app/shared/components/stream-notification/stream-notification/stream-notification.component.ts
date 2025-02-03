@@ -7,11 +7,7 @@ import { StreamNotificationService } from 'src/app/services/stream-notification.
   styleUrls: ['./stream-notification.component.css']
 })
 export class StreamNotificationComponent {
-  @Input() amount: number = 0;
-  @Input() date: string = '';
-  @Input() status: string = '';
-  @Input() type: string = '';
-  transactions: any[] = [];
+  @Input() arrayNotificaciones: any[] = [];
 
   constructor(private streamNotificationService: StreamNotificationService){}
 
@@ -20,19 +16,17 @@ export class StreamNotificationComponent {
       next: (transaction) => {
         if (!transaction) return;
         console.log(transaction);
-
-        this.amount = transaction.monto;
-        this.date = transaction.fecha;
-        this.status = transaction.estado;
-        this.type = transaction.tipoTransaccion;
         
-        // this.transactions.unshift(transaction);
-        setTimeout(() => {
-          this.transactions.pop();
-      }, 4000);
-    },
-    error: (error) => console.log('Error en el stream', error)
-    })
+        this.arrayNotificaciones = [];
+
+        transaction.forEach((element: any) => {
+          this.arrayNotificaciones.push(element);
+        });
+      },
+      error: (error) => {
+        console.log('Error en el stream', error);
+      }
+    });
   }
 
 
