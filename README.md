@@ -12,6 +12,49 @@ Este proyecto es una aplicación web desarrollada con Angular 16 [Angular CLI](h
 - **SweetAlert2 11.15.10**
 - **Zone.js 0.13.0**
 - **TypeScript 4.x**
+- **Podman**
+
+## Dockerizar la Aplicación desde GHCR
+
+Este documento proporciona los pasos para obtener, ejecutar y administrar un contenedor Docker con una imagen almacenada en GitHub Container Registry (GHCR).
+
+## Prerrequisitos
+
+- Tener instalado [Podman](https://podman.io/)
+- Acceso a GitHub Container Registry (GHCR)
+- Haber iniciado sesión en GHCR con Docker:
+
+  ```sh
+  podman login ghcr.io -u <USERNAME> -p <PASSWORD> ghcr.io 
+  ```
+
+## Descargar y Ejecutar la Imagen
+
+- **Descargar la imagen desde GHCR**
+
+    ```sh
+    podman pull ghcr.io/julianest/MonnaLisaProyect_Angular16/angular-app:v1.0.0 
+    ```
+
+- **Correr el contenedor**
+
+    ```sh
+    podman run --rm --name <CONTAINER-NAME> -p 4200:80 -d ghcr.io/julianest/MonnaLisaProyect_Angular16/angular-app:v1.0.0 
+    ```
+
+- **Probar la Aplicación**
+
+    ```sh
+    curl http://localhost:4200
+    ```
+
+## Generar imagen
+
+- **Construir imagen**
+
+    ```sh
+    podman build -t <IMAGE-NAME> -f Containerfile . 
+    ```
 
 ## Características
 
