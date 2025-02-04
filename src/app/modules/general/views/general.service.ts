@@ -15,19 +15,24 @@ import { registerAccountResponse } from 'src/app/models/response/registerAccount
 export class GeneralService {
   constructor(private apiService: ApiService) {}
 
-   /*getBankAccountsById(userRequest: UserRequest): Observable<UserResponse> {
-    const params: GetParams = {
-      url: `/usuario/consultar/${userRequest.numeroIdetificacion}`,
-    };
-    return this.apiService.get<any>(params);
-  }*/
-
   depositTransaction(payload: DepositRequest): Observable<any> {
     return this.apiService.post<any, DepositRequest>('transacciones/deposito', payload);
   }
 
-  registerAccount(accountData: registerAccountRequest): Observable<registerAccountResponse>{
-    return this.apiService.post<registerAccountResponse,registerAccountRequest >('cuenta-bancaria/crear-cuenta', accountData);
+  filtrerTransaction(url: any): Observable<any> {
+    return this.apiService.get('movimiento/movimientos/' + url);
+  }
+
+  findBalance(url: any) {
+    return this.apiService.get('cuenta-bancaria/mostrar-saldo-actual/' + url);
+  } 
+
+  withdrawTransaction(payload: DepositRequest): Observable<any> {
+    return this.apiService.post<any, DepositRequest>('transacciones/retiro', payload);
+  }
+
+  registerAccount(accountData: registerAccountRequest): Observable<any>{
+    return this.apiService.post('cuenta-bancaria/crear-cuenta', accountData);
   }
 
   getInfoUser(url: any) {

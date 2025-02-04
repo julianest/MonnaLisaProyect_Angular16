@@ -1,0 +1,14 @@
+<div class="row text-center mt-3">
+  <div class="col-6" *ngFor="let item of arrayNotificaciones">
+    <div class="card m-1 p-3">
+      <div class="card-hearder">
+        <strong>Estado: {{ item.estado }}</strong>
+      </div>
+      <div class="card-body">
+        <small>{{ item.fecha }}</small><br>
+        <strong>{{ item.tipo }}</strong>
+        <strong>${{ item.monto }}</strong>
+      </div>
+    </div>
+  </div>
+</div>

@@ -29,6 +29,9 @@ export class DashboardComponent implements OnInit {
 
   redireccionar(opcion: number) {
     switch (opcion) {
+      case 0:
+        this.router.navigateByUrl('dashboard/home');
+        break;
       case 1:
         this.router.navigateByUrl('dashboard/depositar');
         break;
@@ -55,15 +58,10 @@ export class DashboardComponent implements OnInit {
         switch (resp.code) {
           case 200:
             localStorage.setItem('nameUser', resp.response.nombre);
-            localStorage.setItem(
-              'identificationNumber',
-              resp.response.numeroIdetificacion
-            );
+            localStorage.setItem('identificationNumber', resp.response.numeroIdetificacion);
 
             this.nameUser = String(localStorage.getItem('nameUser'));
-            this.identificationnumber = String(
-              localStorage.getItem('identificationNumber')
-            );
+            this.identificationnumber = String(localStorage.getItem('identificationNumber'));
             this.alert.cerrar();
             break;
           default:
