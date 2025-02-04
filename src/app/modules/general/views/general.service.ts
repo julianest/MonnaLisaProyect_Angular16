@@ -25,7 +25,7 @@ export class GeneralService {
 
   findBalance(url: any) {
     return this.apiService.get('cuenta-bancaria/mostrar-saldo-actual/' + url);
-  } 
+  }
 
   withdrawTransaction(payload: DepositRequest): Observable<any> {
     return this.apiService.post<any, DepositRequest>('transacciones/retiro', payload);
@@ -38,6 +38,6 @@ export class GeneralService {
   getInfoUser(url: any) {
     return this.apiService.get("usuario/consultar/"+ url);
   }
-}
+} 
 
 

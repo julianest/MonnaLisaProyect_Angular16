@@ -1,0 +1,27 @@
+# Etapa 1: Construcción de la aplicación Angular
+FROM node:18 AS build
+WORKDIR /app
+
+# Copiar archivos necesarios e instalar dependencias
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Instalar Angular CLI globalmente y dar permisos
+RUN npm install -g @angular/cli && chmod +x /usr/local/bin/ng
+
+# Copiar todo el código fuente y generar la compilación
+COPY . .
+RUN npx ng build --configuration=production
+
+# Etapa 2: Servir con Nginx
+FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
+
+# Copiar la aplicación Angular compilada
+COPY --from=build /app/dist/angular-proyect ./
+
+# Copiar configuración de Nginx para manejar rutas
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 4200
+CMD ["nginx", "-g", "daemon off;"]
