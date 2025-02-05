@@ -1,59 +1,56 @@
-import { Injectable, NgZone, OnInit } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { environment } from 'env';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class StreamNotificationService implements OnInit {
-
+export class StreamNotificationService {
   private eventNotification!: EventSource;
   private readonly notificationSubject = new BehaviorSubject<any>(null);
 
   arrayCompleto: any[] = [];
   arrayFinals: any[] = [];
 
-  url: string = "";
+  url: string = '';
 
-  constructor(private readonly zone: NgZone,) {
+  constructor(private readonly zone: NgZone) {
     this.streamTransactionNotification();
+    this.getStreamTransactionNotifications();
   }
 
-  ngOnInit() {
-    this.url = String(localStorage.getItem('numberAccount'));
-  }
+  private streamTransactionNotification(): void {
+    this.eventNotification = new EventSource(
+      `${
+        environment.API_BASE_URL_REACTOR
+      }auditoria/stream?cuentaId=${localStorage.getItem('numberAccount')}`
+    );
 
-  private streamTransactionNotification(): void{
-    const url = this.url;
-    console.log(url);
+    this.eventNotification.onmessage = (event: any) => {
+      const newTransaction = JSON.parse(event.data);
 
-    if (url != null && url != '') {
-      this.eventNotification = new EventSource(String(environment.API_BASE_URL_REACTOR) + String('auditoria/stream?cuentaId=' + localStorage.getItem('numberAccount')));
+      this.arrayCompleto.unshift(newTransaction);
+      this.arrayCompleto = this.arrayCompleto.slice(0, 2);
 
-      this.eventNotification.onmessage = (event: any) => {
-        this.arrayCompleto.push(JSON.parse(event.data));
+      this.zone.run(() => {
+        this.notificationSubject.next([...this.arrayCompleto]);
+      });
 
-        const transaction = [...this.arrayCompleto].sort(
-          (a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
-        );
-
-        console.log(transaction);
-
-        this.zone.run(() => {
-          this.notificationSubject.next(transaction);
-        });
-
-        this.eventNotification.onerror = (error) => {
-          console.error('Error en SSE:', error);
-          this.eventNotification.close();
-        };
+      this.eventNotification.onerror = (error) => {
+        console.error('Error en SSE:', error);
+        this.eventNotification.close();
       };
-    }
+    };
   }
+
+  setTransactionType(type: string): void {
+    this.notificationSubject.next(
+      this.arrayCompleto.filter((transaction: any) => transaction.type === type)
+    );
+  }
+
 
   getStreamTransactionNotifications(): Observable<any> {
-    this.url = String(localStorage.getItem('numberAccount'));
     return this.notificationSubject.asObservable();
   }
-
 }
