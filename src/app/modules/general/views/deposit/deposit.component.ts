@@ -55,7 +55,6 @@ export class DepositComponent {
     const url = String(localStorage.getItem('id_user'));
     this.services.getInfoUser(url).subscribe({
       next: (resp: any) => {
-        // console.log(resp);
         switch(resp.code) {
           case 200:
             resp.response.cuentasBancarias.forEach((element: any) =>{
@@ -81,25 +80,25 @@ export class DepositComponent {
       });
     } else {
       // this.alert.loading();
-      
+
       const payload = {
         numeroCuenta: Number(this.depositForm.value.inputAccount),
         monto: Number(this.depositForm.value.inputDeposit)
       };
-  
+
       this.services.depositTransaction(payload).pipe(finalize(() => {
         this.streamNotificationTransaction();
       })).subscribe({
         next: (resp: any) => {
           switch(resp.code) {
             case 200:
-              localStorage.setItem('numberAccount', String(payload.numeroCuenta));              
-              // this.alert.success("Depósito exitoso", resp.message);
+              localStorage.setItem('numberAccount', String(payload.numeroCuenta));
+              this.alert.success("Depósito exitoso", resp.message);
               break;
             default:
               this.alert.warning("Ocurrio un problema", "por favor revisar la información del deposito");
               break;
-          }         
+          }
         },
         error: (error) => {
           this.alert.error("Error desconocido", "Por favor intentelo más tarde");
@@ -115,10 +114,11 @@ export class DepositComponent {
   streamNotificationTransaction() {
     this.streamNotificaction.getStreamTransactionNotifications().subscribe({
       next: (transaction: any) => {
+        console.log('stream ' +transaction)
         if (!transaction) return;
-        console.log(transaction);  
-        this.arrayNotificaciones = [];      
-        this.arrayNotificacionesFinal = [];      
+        console.log(transaction);
+        this.arrayNotificaciones = [];
+        this.arrayNotificacionesFinal = [];
         // this.currentBalance = transaction.finalBalance;
         transaction.forEach((element: any) => {
           this.arrayNotificaciones.push(element);
