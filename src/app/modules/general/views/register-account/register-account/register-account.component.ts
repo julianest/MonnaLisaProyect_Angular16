@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { registerAccountRequest } from 'src/app/models/request/registerAccount-request.model';
+import { RegisterAccountRequest } from 'src/app/models/request/registerAccount-request.model';
 import { SpinnerService } from 'src/app/services/spinner.service';
 import { GeneralService } from '../../general.service';
-import { registerAccountResponse } from 'src/app/models/response/registerAccount-response.model';
+import { RegisterAccountResponse } from 'src/app/models/response/registerAccount-response.model';
+import { Alertas } from 'utils/alerts';
 
 @Component({
   selector: 'app-register-account',
@@ -17,16 +17,16 @@ export class RegisterAccountComponent {
   registerAccountForm!: FormGroup;
 
   accountSuccess: boolean = false;
-  numberIdentification!: String;
+  numberIdentification!: string;
   numberAccount!: number;
-  message: String = '';
+  message: string = '';
   balance!: number;
 
 constructor(
-    private generalService: GeneralService,
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private spinnerService: SpinnerService,
+    private readonly generalService: GeneralService,
+    private readonly formBuilder: FormBuilder,
+    private readonly spinnerService: SpinnerService,
+    private readonly alert: Alertas
   ) {
     this.registerAccountInitializeForm();
   }
@@ -34,10 +34,8 @@ constructor(
 
 registerAccountInitializeForm() {
     this.registerAccountForm = this.formBuilder.group({
-      // inputNumberAccount: ['', [Validators.required, Validators.maxLength(8)]],
       inputBalance: ['', [Validators.required, Validators.maxLength(8)]],
-      inputTypeAccount: ['', [Validators.required, Validators.maxLength(8)]],
-      inputNumberIdentification: ['', [Validators.required, Validators.maxLength(8)]],
+      inputTypeAccount: ['', [Validators.required, Validators.maxLength(8)]]
     });
   }
 
@@ -49,42 +47,36 @@ registerAccountInitializeForm() {
     } else {
       this.spinnerService.show();
 
-      const accountData: registerAccountRequest = {
-        saldo: this.registerAccountForm.controls['inputBalance'].value,
+      const accountData: RegisterAccountRequest = {
+        saldo: Number(this.registerAccountForm.controls['inputBalance'].value),
         tipoCuenta: this.registerAccountForm.controls['inputTypeAccount'].value,
-        numeroIdetificacion: this.registerAccountForm.controls['inputNumberIdentification'].value,
+        numeroIdetificacion: String(localStorage.getItem('identificationNumber')),
       };
 
       this.generalService.registerAccount(accountData).subscribe({
-        next: (data: registerAccountResponse) => {
-          switch (data.code) {
-            case 200:
-              this.accountSuccess = true;
-              this.message = data.message;
-              this.numberAccount = data.response.numeroCuenta;
-              this.numberIdentification = accountData.numeroIdetificacion;
-              this.balance = accountData.saldo;
-              break;
-            default:
-              console.log('Error en el login');
-              break;
+        next: (data: RegisterAccountResponse) => {
+          this.spinnerService.hide();
+          if (data.code === 200) {
+            this.accountSuccess = true;
+            this.message = data.message;
+            this.numberAccount = data.response.numeroCuenta;
+            this.numberIdentification = accountData.numeroIdetificacion;
+            this.balance = accountData.saldo;
+          } else {
+            this.alert.warning('Advertencia', String(data.message));
           }
-          console.log('Login exitoso: ', data);
         },
-        error: (error) => {
-          this.spinnerService.hide(1000);
-          console.error('Error en el login: ', error);
-        },
-        complete: () => {
-          this.spinnerService.hide(1000);
+        error: () => {
+          this.spinnerService.hide();
+          this.alert.error('Ocurrió un error', 'No se pudo crear la cuenta');
         }
       });
     }
   }
 
-  // get numberAccountWrong() {
-  //   return this.registerAccountForm.get('inputEmail')?.invalid && this.registerAccountForm.get('inputEmail')?.touched;
-  // }
+  resetForm() {
+    this.registerAccountForm.reset();
+  }
 
   get balanceWrong() {
     return this.registerAccountForm.get('inputBalance')?.invalid && this.registerAccountForm.get('inputBalance')?.touched;
@@ -94,7 +86,4 @@ registerAccountInitializeForm() {
     return this.registerAccountForm.get('inputTypeAccount')?.invalid && this.registerAccountForm.get('inputTypeAccount')?.touched;
   }
 
-  get numberIdentificationWrong() {
-    return this.registerAccountForm.get('inputNumberIdentification')?.invalid && this.registerAccountForm.get('inputNumberIdentification')?.touched;
-  }
 }

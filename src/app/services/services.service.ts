@@ -8,14 +8,12 @@ import { catchError, Observable, of, throwError } from 'rxjs';
   providedIn: 'root',
 })
 export class ApiService {
-
+  headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   baseUrl: string = "";
 
-  constructor(private http: HttpClient) {}
-  
-  post<T, P>(url: string, payload: P): Observable<T> {
-    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  constructor(private readonly http: HttpClient) {}
 
+  post<T, P>(url: string, payload: P): Observable<T> {
     if (url === 'auth/login' || url === 'auth/register') {
       this.baseUrl = environment.API_BASE_URL_BACK;
     } else {
@@ -24,15 +22,15 @@ export class ApiService {
       } else {
         this.baseUrl = environment.API_BASE_URL_BACK;
       }
-      
-      headers = headers.set(
+
+      this.headers = this.headers.set(
         'Authorization',
-        String(localStorage.getItem('access_token')),
+        String('Bearer '+localStorage.getItem('access_token')),
       );
     }
 
     return this.http
-      .post<T>(`${this.baseUrl}${url}`, payload, { headers })
+      .post<T>(`${this.baseUrl}${url}`, payload, { headers: this.headers })
       .pipe(catchError(this.handleError));
   }
 
@@ -41,7 +39,7 @@ export class ApiService {
     const headers = new HttpHeaders({
       'Content-Type':
         'application/json, application/x-www-form-urlencoded; charset=UTF-8',
-      Authorization: `Bearer ${localStorage.getItem('access_token') || ''}`,
+      Authorization: `Bearer ${localStorage.getItem('access_token') ?? ''}`,
     });
 
     const url = environment.API_BASE_URL_BACK + params;
@@ -52,7 +50,7 @@ export class ApiService {
   }
 
   private handleError(error: any): Observable<never> {
-    
+
     return throwError(
       () => new Error(error.message || 'Ocurrió un error en la API.')
     );

@@ -10,7 +10,7 @@ export class SpinnerComponent {
   @Input() isVisible: boolean = false;
   @Input() message: string = 'Cargando...';
 
-  constructor(private spinnerService: SpinnerService) {
+  constructor(private readonly spinnerService: SpinnerService) {
     this.spinnerService.isVisible$.subscribe((visible) => {
       this.isVisible = visible;
     });

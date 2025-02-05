@@ -18,10 +18,10 @@ export class LoginComponent {
   loginForm!: FormGroup;
 
   constructor(
-    private authService: AuthService,
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private alert: Alertas
+    private readonly authService: AuthService,
+    private readonly formBuilder: FormBuilder,
+    private readonly router: Router,
+    private readonly alert: Alertas
   ) {
     this.loginInitializeForm();
   }
@@ -52,25 +52,22 @@ export class LoginComponent {
 
       this.authService.login(credentials).subscribe({
         next: (resp: ServiceResponse) => {
-          switch (resp.code) {
-            case 200:
-              localStorage.setItem('access_token', resp.response.access_token);
-              localStorage.setItem('id_user', String(resp.response.id_user));
+          if (resp.code === 200) {
+            localStorage.setItem('access_token', resp.response.access_token);
+            localStorage.setItem('id_user', String(resp.response.id_user));
 
-              this.alert.success("Usuario registrado", resp.message);
+            this.alert.success("Usuario registrado", resp.message);
 
-              this.loginForm.reset();
+            this.loginForm.reset();
 
-              setTimeout(() => {
-                this.router.navigateByUrl('dashboard/home');
-              }, 2000);
-              break;
-            default:
-              this.alert.error("No se pudo inciiar sesión", "Usuario no encontrado por favor revisar las credenciales");
-              break;
+            setTimeout(() => {
+              this.router.navigateByUrl('dashboard/home');
+            }, 2000);
+          } else {
+            this.alert.error("No se pudo iniciar sesión", "Usuario no encontrado, por favor revisar las credenciales");
           }
         },
-        error: (error: any) => {
+        error: () => {
           this.alert.error("Error desconocido", "Por favor intentelo más tarde");
         }
       });

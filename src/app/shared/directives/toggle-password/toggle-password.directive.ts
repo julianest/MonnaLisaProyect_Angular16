@@ -7,7 +7,7 @@ export class TogglePasswordDirective {
   @Input() targetInput!: HTMLInputElement;
   private isPasswordVisible: boolean = false;
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  constructor(private readonly el: ElementRef, private readonly renderer: Renderer2) {}
 
   @HostListener('click') onClick(): void {
     this.isPasswordVisible = !this.isPasswordVisible;

@@ -1,8 +1,8 @@
 export interface RegisterRequest{
-    numeroIdetificacion: String,
-    nombre: String,
-    apellido: String,
-    telefono: String,
-    correo: String,
-    contrasena: String,
+    numeroIdetificacion: string,
+    nombre: string,
+    apellido: string,
+    telefono: string,
+    correo: string,
+    contrasena: string,
 }

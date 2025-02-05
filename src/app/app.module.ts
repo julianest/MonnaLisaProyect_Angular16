@@ -17,6 +17,7 @@ import { DepositComponent } from './modules/general/views/deposit/deposit.compon
 import { WithdrawComponent } from './modules/general/views/withdraw/withdraw.component';
 import { SpinnerComponent } from './shared/components/spinner/spinner/spinner.component';
 import { RegisterAccountComponent } from './modules/general/views/register-account/register-account/register-account.component';
+import { StreamNotificationComponent } from './shared/components/stream-notification/stream-notification/stream-notification.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { RegisterAccountComponent } from './modules/general/views/register-accou
     DepositComponent,
     WithdrawComponent,
     SpinnerComponent,
-    RegisterAccountComponent
+    RegisterAccountComponent,
+    StreamNotificationComponent
   ],
   imports: [
     BrowserModule,

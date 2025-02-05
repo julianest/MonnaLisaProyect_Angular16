@@ -13,9 +13,9 @@ export class DashboardComponent implements OnInit {
   identificationnumber: string = '';
 
   constructor(
-    private router: Router,
-    private services: GeneralService,
-    private alert: Alertas
+    private readonly router: Router,
+    private readonly services: GeneralService,
+    private readonly alert: Alertas
   ) {}
 
   ngOnInit(): void {
@@ -54,29 +54,20 @@ export class DashboardComponent implements OnInit {
 
     this.services.getInfoUser(url).subscribe({
       next: (resp: any) => {
-        // console.log(resp);
-        switch (resp.code) {
-          case 200:
-            localStorage.setItem('nameUser', resp.response.nombre);
-            localStorage.setItem(
-              'identificationNumber',
-              resp.response.numeroIdetificacion
-            );
+        if (resp.code === 200) {
+          localStorage.setItem('nameUser', resp.response.nombre);
+          localStorage.setItem('identificationNumber', resp.response.numeroIdetificacion);
 
-            this.nameUser = String(localStorage.getItem('nameUser'));
-            this.identificationnumber = String(
-              localStorage.getItem('identificationNumber')
-            );
-            this.alert.cerrar();
-            break;
-          default:
-            this.alert.warning('Ocurrio un problema', resp.message);
-            break;
+          this.nameUser = String(localStorage.getItem('nameUser'));
+          this.identificationnumber = String(localStorage.getItem('identificationNumber'));
+          this.alert.cerrar();
+        } else {
+          this.alert.warning('Ocurrió un problema', resp.message);
         }
       },
       error: (error: any) => {
-        this.alert.warning('Ocurrio un error', error);
-      },
+        this.alert.warning('Ocurrió un error', error);
+      }
     });
   }
 

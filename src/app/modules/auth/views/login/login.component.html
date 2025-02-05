@@ -7,7 +7,9 @@
   <div class="login-container">
     <div class="row text-center">
       <div class="col-12">
-        <h2 class="text-center text-success fw-bold m-0"><b>BANK-PICASSO</b></h2>
+        <h2 class="text-center text-success fw-bold m-0">
+          <b>BANK-PICASSO</b>
+        </h2>
       </div>
       <div class="col-12 mb-2">
         <small>¡Accede a tu cuenta!</small>
@@ -15,7 +17,12 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <form id="login-form" [formGroup]="loginForm" (ngSubmit)="submitLoginData()" novalidate>
+        <form
+          id="login-form"
+          [formGroup]="loginForm"
+          (ngSubmit)="submitLoginData()"
+          novalidate
+        >
           <div class="mb-3">
             <div class="input-group">
               <input
@@ -49,19 +56,29 @@
               />
               <div class="input-group-append">
                 <div class="input-group-text">
-                  <span (click)="viewPassword()" [ngClass]="show ? 'fas fa-eye-low-vision' : 'fas fa-eye'"></span>
+                  <span
+                    (click)="viewPassword()"
+                    (keydown.enter)="viewPassword()"
+                    (keydown.space)="viewPassword()"
+                    [ngClass]="show ? 'fas fa-eye-low-vision' : 'fas fa-eye'"
+                  ></span>
                 </div>
               </div>
             </div>
             <small *ngIf="passwordErroneo" class="text-danger">
               Revisar la contraseña del usuario
             </small>
-          </div>      
+          </div>
           <div class="buttons">
             <button type="submit" class="button" id="login-button">
               Iniciar Sesión
             </button>
-            <button type="button" (click)="resetForm()" class="button cancel" id="cancel-button">
+            <button
+              type="button"
+              (click)="resetForm()"
+              class="button cancel"
+              id="cancel-button"
+            >
               Cancelar
             </button>
           </div>
@@ -70,7 +87,9 @@
       <div class="col-12">
         <p style="text-align: center; color: black; margin-top: 5%">
           ¿No tienes cuenta?
-          <a [routerLink]="['/register']" id="register-link">¡Regístrate aquí!</a>
+          <a [routerLink]="['/register']" id="register-link"
+            >¡Regístrate aquí!</a
+          >
         </p>
       </div>
     </div>

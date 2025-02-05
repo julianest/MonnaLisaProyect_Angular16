@@ -17,10 +17,10 @@ export class RegisterComponent {
   registerForm!: FormGroup;
 
   constructor(
-    private authService: AuthService,
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private alert: Alertas
+    private readonly authService: AuthService,
+    private readonly formBuilder: FormBuilder,
+    private readonly router: Router,
+    private readonly alert: Alertas
   ) {
     this.registerInitializeForm();
   }
@@ -47,7 +47,7 @@ export class RegisterComponent {
       });
     } else {
       this.alert.loading();
-  
+
       const userData: RegisterRequest = {
         numeroIdetificacion: this.registerForm.controls['inputIdentificationNumber'].value,
         nombre: this.registerForm.controls['inputName'].value,
@@ -56,26 +56,26 @@ export class RegisterComponent {
         correo: this.registerForm.controls['inputEmail'].value,
         contrasena: this.registerForm.controls['inputPassword'].value,
       };
-  
+
       this.authService.register(userData).subscribe({
         next: (response: any) => {
-          switch (response.code) {
-            case 200:
-              this.registerForm.reset();
-              this.alert.success("Usuario registrado", response.message);
+          if (response.code === 200) {
+            this.registerForm.reset();
+            this.alert.success("Usuario registrado", response.message);
 
-              setTimeout(() => {
-                this.router.navigateByUrl('/login');
-              }, 2000);
-              break;
-            default:
-                this.alert.error("No se pudo registrar el usuario", "Usuario no registrado, por favor revise la información, tener en cuenta que la contraseña son minimo 6 caracteres y un caracter especial");
-                break;
-            }
-          },
-          error: (error: any) => {
-            this.alert.error("Error desconocido", "Por favor intentelo más tarde");
+            setTimeout(() => {
+              this.router.navigateByUrl('/login');
+            }, 2000);
+          } else {
+            this.alert.error(
+              "No se pudo registrar el usuario",
+              "Usuario no registrado, por favor revise la información. Tener en cuenta que la contraseña debe tener mínimo 6 caracteres y un carácter especial"
+            );
           }
+        },
+        error: () => {
+          this.alert.error("Error desconocido", "Por favor intentelo más tarde");
+        }
       });
     }
   }

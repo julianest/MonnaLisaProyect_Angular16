@@ -1,5 +1,5 @@
-export interface registerAccountRequest{
+export interface RegisterAccountRequest{
   saldo: number;
-  tipoCuenta: String;
-  numeroIdetificacion: String;
+  tipoCuenta: string;
+  numeroIdetificacion: string;
 }

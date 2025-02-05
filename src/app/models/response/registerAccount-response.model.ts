@@ -1,5 +1,5 @@
-export interface registerAccountResponse {
-  message: String;
+export interface RegisterAccountResponse {
+  message: string;
   code: number;
   response: {
     numeroCuenta:number;

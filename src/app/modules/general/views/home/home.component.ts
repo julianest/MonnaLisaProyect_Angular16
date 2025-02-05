@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GeneralService } from '../general.service';
 import { Alertas } from 'utils/alerts';
 import { BankAccount } from 'src/app/models/response/bankAccount-response.model';
-import { transactionResponse } from 'src/app/models/response/transaction-response.model';
+import { TransactionResponse } from 'src/app/models/response/transaction-response.model';
 
 @Component({
   selector: 'app-home',
@@ -13,16 +13,16 @@ import { transactionResponse } from 'src/app/models/response/transaction-respons
 export class HomeComponent implements OnInit {
 
   bankAccount: BankAccount[] = [];
-  transactionResponse: transactionResponse[] = [];
+  transactionResponse: TransactionResponse[] = [];
   saldoActual: string = "";
 
   homeFilterForm!: FormGroup;
 
   constructor(
-    private services: GeneralService,
-    private formBuilder: FormBuilder,
-    private alert: Alertas
-  ) { 
+    private readonly services: GeneralService,
+    private readonly formBuilder: FormBuilder,
+    private readonly alert: Alertas
+  ) {
     this.filterInitializeForm();
   }
 
@@ -40,21 +40,15 @@ export class HomeComponent implements OnInit {
     const url = String(localStorage.getItem('id_user'));
     this.services.getInfoUser(url).subscribe({
       next: (resp: any) => {
-        // console.log(resp);
-        switch(resp.code) {
-          case 200:
-            resp.response.cuentasBancarias.forEach((element: any) =>{
-              this.bankAccount.push(element)
-            })
-            this.alert.cerrar();
-            break;
-          default:
-            this.alert.warning("Ocurrio un problema", resp.message);
-            break;
+        if (resp.code === 200) {
+          this.bankAccount.push(...resp.response.cuentasBancarias);
+          this.alert.cerrar();
+        } else {
+          this.alert.warning("Ocurrió un problema", resp.message);
         }
       },
       error: (error: any) => {
-        this.alert.warning("Ocurrio un error", error);
+        this.alert.warning("Ocurrió un error", error);
       }
     });
   }
@@ -66,28 +60,21 @@ export class HomeComponent implements OnInit {
       });
     } else {
       this.alert.loading();
-      
+
       const url =  Number(this.homeFilterForm.value.inputAccount);
-  
+
       this.services.filtrerTransaction(url).subscribe({
         next: (resp: any) => {
-          // console.log(resp);          
-          switch(resp.code) {
-            case 200:
-              resp.response.forEach((elemnt: any) => {
-                this.transactionResponse.push(elemnt);
-              });
-
-              this.findbalance(url);
-              this.alert.cerrar();
-              break;
-            default:
-              this.alert.warning("Ocurrio un problema", "por favor revisar la información del deposito");
-              break;
-          }         
+          if (resp.code === 200) {
+            this.transactionResponse.push(...resp.response);
+            this.findbalance(url);
+            this.alert.cerrar();
+          } else {
+            this.alert.warning("Ocurrió un problema", "Por favor revisar la información del depósito");
+          }
         },
-        error: (error) => {
-          this.alert.error("Error desconocido", "Por favor intentelo más tarde");
+        error: () => {
+          this.alert.error("Error desconocido", "Por favor inténtelo más tarde");
         }
       });
     }
@@ -96,8 +83,6 @@ export class HomeComponent implements OnInit {
   findbalance(url: number) {
     this.services.findBalance(url).subscribe({
       next: (resp: any) => {
-        // console.log(resp);
-        // this.transactionResponse.push(resp.response);
         this.saldoActual = String(resp.response.saldo);
       },
       error: (error) => {

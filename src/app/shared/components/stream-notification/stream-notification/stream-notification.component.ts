@@ -7,24 +7,26 @@ import { StreamNotificationService } from 'src/app/services/stream-notification.
   styleUrls: ['./stream-notification.component.css']
 })
 export class StreamNotificationComponent {
-  @Input() amount: number = 0;
-  @Input() date: string = '';
-  @Input() type: string = '';
-  transactions: any[] = [];
+  @Input() arrayNotificaciones: any[] = [];
 
-  constructor(private streamNotificationService: StreamNotificationService){}
+  constructor(private readonly streamNotificationService: StreamNotificationService){}
 
   ngOnInit(): void {
     this.streamNotificationService.getStreamTransactionNotifications().subscribe({
       next: (transaction) => {
         if (!transaction) return;
-        this.transactions.unshift(transaction);
-      //   setTimeout(() => {
-      //     this.transactions.pop();
-      // }, 5000);
-    },
-    error: (error) => console.log('Error en el stream', error)
-    })
+        console.log(transaction);
+
+        this.arrayNotificaciones = [];
+
+        transaction.forEach((element: any) => {
+          this.arrayNotificaciones.push(element);
+        });
+      },
+      error: (error) => {
+        console.log('Error en el stream', error);
+      }
+    });
   }
 
 
