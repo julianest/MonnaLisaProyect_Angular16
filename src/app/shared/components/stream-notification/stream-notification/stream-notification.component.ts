@@ -9,14 +9,14 @@ import { StreamNotificationService } from 'src/app/services/stream-notification.
 export class StreamNotificationComponent {
   @Input() arrayNotificaciones: any[] = [];
 
-  constructor(private streamNotificationService: StreamNotificationService){}
+  constructor(private readonly streamNotificationService: StreamNotificationService){}
 
   ngOnInit(): void {
     this.streamNotificationService.getStreamTransactionNotifications().subscribe({
       next: (transaction) => {
         if (!transaction) return;
         console.log(transaction);
-        
+
         this.arrayNotificaciones = [];
 
         transaction.forEach((element: any) => {

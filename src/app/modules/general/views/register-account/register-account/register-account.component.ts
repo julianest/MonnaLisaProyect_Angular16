@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { registerAccountRequest } from 'src/app/models/request/registerAccount-request.model';
+import { RegisterAccountRequest } from 'src/app/models/request/registerAccount-request.model';
 import { SpinnerService } from 'src/app/services/spinner.service';
 import { GeneralService } from '../../general.service';
-import { registerAccountResponse } from 'src/app/models/response/registerAccount-response.model';
+import { RegisterAccountResponse } from 'src/app/models/response/registerAccount-response.model';
 import { Alertas } from 'utils/alerts';
 
 @Component({
@@ -18,16 +17,16 @@ export class RegisterAccountComponent {
   registerAccountForm!: FormGroup;
 
   accountSuccess: boolean = false;
-  numberIdentification!: String;
+  numberIdentification!: string;
   numberAccount!: number;
-  message: String = '';
+  message: string = '';
   balance!: number;
 
 constructor(
-    private generalService: GeneralService,
-    private formBuilder: FormBuilder,
-    private spinnerService: SpinnerService,
-    private alert: Alertas
+    private readonly generalService: GeneralService,
+    private readonly formBuilder: FormBuilder,
+    private readonly spinnerService: SpinnerService,
+    private readonly alert: Alertas
   ) {
     this.registerAccountInitializeForm();
   }
@@ -48,33 +47,28 @@ registerAccountInitializeForm() {
     } else {
       this.spinnerService.show();
 
-      const accountData: registerAccountRequest = {
+      const accountData: RegisterAccountRequest = {
         saldo: Number(this.registerAccountForm.controls['inputBalance'].value),
         tipoCuenta: this.registerAccountForm.controls['inputTypeAccount'].value,
         numeroIdetificacion: String(localStorage.getItem('identificationNumber')),
       };
 
       this.generalService.registerAccount(accountData).subscribe({
-        next: (data: registerAccountResponse) => {
-          switch (data.code) {
-            case 200:
-              this.spinnerService.hide();
-
-              this.accountSuccess = true;
-              this.message = data.message;
-              this.numberAccount = data.response.numeroCuenta;
-              this.numberIdentification = accountData.numeroIdetificacion;
-              this.balance = accountData.saldo;
-              break;
-            default:
-              this.spinnerService.hide();
-              this.alert.warning('Advertencia', String(data.message));
-              break;
+        next: (data: RegisterAccountResponse) => {
+          this.spinnerService.hide();
+          if (data.code === 200) {
+            this.accountSuccess = true;
+            this.message = data.message;
+            this.numberAccount = data.response.numeroCuenta;
+            this.numberIdentification = accountData.numeroIdetificacion;
+            this.balance = accountData.saldo;
+          } else {
+            this.alert.warning('Advertencia', String(data.message));
           }
         },
         error: () => {
           this.spinnerService.hide();
-          this.alert.error('Ocurrio un error', 'No se pudo crear la cuenta');
+          this.alert.error('Ocurrió un error', 'No se pudo crear la cuenta');
         }
       });
     }

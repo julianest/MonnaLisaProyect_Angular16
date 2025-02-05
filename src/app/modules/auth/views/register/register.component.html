@@ -1,5 +1,4 @@
 <div class="general-container">
-  <!-- <app-circular-menu></app-circular-menu> -->
   <app-animated-background
     [circleColor]="'#1db954'"
     [numCircles]="15"
@@ -7,7 +6,9 @@
   <div class="register-container">
     <div class="row text-center">
       <div class="col-12">
-        <h2 class="text-center text-success fw-bold m-0"><b>BANK-PICASSO</b></h2>
+        <h2 class="text-center text-success fw-bold m-0">
+          <b>BANK-PICASSO</b>
+        </h2>
       </div>
       <div class="col-12 mb-2">
         <small>¡Registrate!</small>
@@ -102,7 +103,12 @@
               />
               <div class="input-group-append">
                 <div class="input-group-text">
-                  <span (click)="viewPassword()" [ngClass]="show ? 'fas fa-eye-low-vision' : 'fas fa-eye'"></span>
+                  <span
+                    (click)="viewPassword()"
+                    (keydown.enter)="viewPassword()"
+                    (keydown.space)="viewPassword()"
+                    [ngClass]="show ? 'fas fa-eye-low-vision' : 'fas fa-eye'"
+                  ></span>
                 </div>
               </div>
             </div>
@@ -112,7 +118,12 @@
           </div>
           <div class="buttons">
             <button type="submit" class="button">Registrar</button>
-            <button type="button" (click)="resetForm()" class="button cancel" id="cancel-button">
+            <button
+              type="button"
+              (click)="resetForm()"
+              class="button cancel"
+              id="cancel-button"
+            >
               Cancelar
             </button>
           </div>

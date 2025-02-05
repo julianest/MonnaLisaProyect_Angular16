@@ -9,7 +9,7 @@ import { ApiService } from "src/app/services/services.service";
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private apiService: ApiService) {}
+  constructor(private readonly apiService: ApiService) {}
 
   login(credentials: AuthRequest): Observable<ServiceResponse> {
     return this.apiService.post<ServiceResponse, AuthRequest>('auth/login', credentials);

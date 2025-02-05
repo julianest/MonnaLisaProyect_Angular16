@@ -1,4 +1,4 @@
-export interface transactionResponse {
+export interface TransactionResponse {
     fechaMovimiento: string;
     monto: number;
     tipoMovimiento: string;

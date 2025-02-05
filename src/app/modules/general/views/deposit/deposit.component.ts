@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
-import { UserRequest } from 'src/app/models/request/user-request.model';
 import { BankAccount } from 'src/app/models/response/bankAccount-response.model';
 import { GeneralService} from 'src/app/modules/general/views/general.service';
 import { StreamNotificationService } from 'src/app/services/stream-notification.service';
@@ -27,10 +26,10 @@ export class DepositComponent {
   depositForm!: FormGroup;
 
   constructor(
-    private services: GeneralService,
-    private formBuilder: FormBuilder,
-    private alert: Alertas,
-    private streamNotificaction: StreamNotificationService
+    private readonly services: GeneralService,
+    private readonly formBuilder: FormBuilder,
+    private readonly alert: Alertas,
+    private readonly streamNotificaction: StreamNotificationService
   ) {
     this.depositInitializeForm();
   }
@@ -55,20 +54,15 @@ export class DepositComponent {
     const url = String(localStorage.getItem('id_user'));
     this.services.getInfoUser(url).subscribe({
       next: (resp: any) => {
-        switch(resp.code) {
-          case 200:
-            resp.response.cuentasBancarias.forEach((element: any) =>{
-              this.bankAccount.push(element)
-            })
-            this.alert.cerrar();
-            break;
-          default:
-            this.alert.warning("Ocurrio un problema", resp.message);
-            break;
+        if (resp.code === 200) {
+          this.bankAccount.push(...resp.response.cuentasBancarias);
+          this.alert.cerrar();
+        } else {
+          this.alert.warning("Ocurrió un problema", resp.message);
         }
       },
       error: (error: any) => {
-        this.alert.warning("Ocurrio un error", error);
+        this.alert.warning("Ocurrió un error", error);
       }
     });
   }
@@ -79,36 +73,32 @@ export class DepositComponent {
         control.markAllAsTouched();
       });
     } else {
-      // this.alert.loading();
-
       const payload = {
         numeroCuenta: Number(this.depositForm.value.inputAccount),
         monto: Number(this.depositForm.value.inputDeposit)
       };
 
-      this.services.depositTransaction(payload).pipe(finalize(() => {
-        this.streamNotificationTransaction();
-      })).subscribe({
+      this.services.depositTransaction(payload).pipe(
+        finalize(() => {
+          this.streamNotificationTransaction();
+        })
+      ).subscribe({
         next: (resp: any) => {
-          switch(resp.code) {
-            case 200:
-              localStorage.setItem('numberAccount', String(payload.numeroCuenta));
-              this.alert.success("Depósito exitoso", resp.message);
-              break;
-            default:
-              this.alert.warning("Ocurrio un problema", "por favor revisar la información del deposito");
-              break;
+          if (resp.code === 200) {
+            localStorage.setItem('numberAccount', String(payload.numeroCuenta));
+            this.alert.success("Depósito exitoso", resp.message);
+          } else {
+            this.alert.warning("Ocurrió un problema", "Por favor revisar la información del depósito");
           }
         },
-        error: (error) => {
-          this.alert.error("Error desconocido", "Por favor intentelo más tarde");
+        error: () => {
+          this.alert.error("Error desconocido", "Por favor inténtelo más tarde");
         },
         complete: () => {
           this.depositForm.reset();
         }
       });
     }
-
   }
 
   streamNotificationTransaction() {
@@ -119,14 +109,11 @@ export class DepositComponent {
         console.log(transaction);
         this.arrayNotificaciones = [];
         this.arrayNotificacionesFinal = [];
-        // this.currentBalance = transaction.finalBalance;
         transaction.forEach((element: any) => {
           this.arrayNotificaciones.push(element);
         });
 
         this.arrayNotificacionesFinal = this.arrayNotificaciones.slice(0, 2);
-
-        // localStorage.removeItem('numberAccount');
       },
       error: (error) => console.error('Error en el stream:', error)
     });
