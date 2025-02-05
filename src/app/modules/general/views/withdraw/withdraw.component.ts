@@ -15,9 +15,9 @@ export class WithdrawComponent implements OnInit {
   withdrawForm!: FormGroup;
 
   constructor(
-    private formBuilder: FormBuilder,
-    private services: GeneralService,
-    private alert: Alertas
+    private readonly formBuilder: FormBuilder,
+    private readonly services: GeneralService,
+    private readonly alert: Alertas
   ) {
     this.withdrawInitializeForm();
   }
@@ -38,21 +38,17 @@ export class WithdrawComponent implements OnInit {
     this.services.getInfoUser(url).subscribe({
       next: (resp: any) => {
         console.log(resp);
-        switch (resp.code) {
-          case 200:
-            resp.response.cuentasBancarias.forEach((element: any) => {
-              this.bankAccount.push(element);
-            });
-            this.alert.cerrar();
-            break;
-          default:
-            this.alert.warning('Ocurrio un problema', resp.message);
-            break;
+
+        if (resp.code === 200) {
+          this.bankAccount.push(...resp.response.cuentasBancarias);
+          this.alert.cerrar();
+        } else {
+          this.alert.warning('Ocurrió un problema', resp.message);
         }
       },
       error: (error: any) => {
-        this.alert.warning('Ocurrio un error', error);
-      },
+        this.alert.warning('Ocurrió un error', error);
+      }
     });
   }
 
@@ -71,26 +67,17 @@ export class WithdrawComponent implements OnInit {
 
       this.services.withdrawTransaction(payload).subscribe({
         next: (resp: any) => {
-          switch (resp.code) {
-            case 200:
-              this.withdrawForm.reset();
-              localStorage.setItem('numberAccount', String(payload.numeroCuenta));
-              this.alert.success('Retiro exitoso', resp.message);
-              break;
-            default:
-              this.alert.warning(
-                'Ocurrio un problema',
-                'por favor revisar la información del retiro'
-              );
-              break;
+          if (resp.code === 200) {
+            this.withdrawForm.reset();
+            localStorage.setItem('numberAccount', String(payload.numeroCuenta));
+            this.alert.success('Retiro exitoso', resp.message);
+          } else {
+            this.alert.warning('Ocurrió un problema', 'Por favor revisar la información del retiro');
           }
         },
-        error: (error) => {
-          this.alert.error(
-            'Error desconocido',
-            'Por favor intentelo más tarde'
-          );
-        },
+        error: () => {
+          this.alert.error('Error desconocido', 'Por favor inténtelo más tarde');
+        }
       });
     }
   }

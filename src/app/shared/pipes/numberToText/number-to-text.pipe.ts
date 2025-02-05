@@ -57,18 +57,20 @@ export class NumberToTextPipe implements PipeTransform {
       return texto.trim();
     };
 
-    const handleMillions = (num: number): void => {
-      const millones = Math.floor(num / 1_000_000);
-      const resto = num % 1_000_000;
-      if (millones > 0) {
-        partes.push(
-          `${millones === 1 ? MILLONES : `${parseNumber(millones)} ${MILLONES_PLURAL}`}`
-        );
-      }
-      if (resto > 0) {
-        handleThousands(resto);
-      }
-    };
+const handleMillions = (num: number): void => {
+  const millones = Math.floor(num / 1_000_000);
+  const resto = num % 1_000_000;
+
+  if (millones > 0) {
+    const millonesTexto = millones === 1 ? MILLONES : parseNumber(millones) + " " + MILLONES_PLURAL;
+    partes.push(millonesTexto);
+  }
+
+  if (resto > 0) {
+    handleThousands(resto);
+  }
+};
+
 
     const handleThousands = (num: number): void => {
       const miles = Math.floor(num / 1_000);

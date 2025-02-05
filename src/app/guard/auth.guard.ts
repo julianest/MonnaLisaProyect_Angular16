@@ -7,7 +7,7 @@ import { Observable, tap } from "rxjs";
     providedIn: 'root'
 })
 export class AuthGuard {
-    constructor(private service: ApiService, private router: Router) { }
+    constructor(private readonly service: ApiService, private readonly router: Router) { }
 
     canActivate(): Observable<boolean> | boolean {
         return this.service.verificarLogin().pipe(
