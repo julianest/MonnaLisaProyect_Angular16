@@ -25,14 +25,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Create environment.prod.ts
-        run: |
-          mkdir -p src/environments
-          echo "export const environment = {" > src/environments/environment.ts
-          echo "  API_BASE_URL_BACK: '${{ secrets.API_BASE_URL_BACK }}'," >> src/environments/environment.ts
-          echo "  API_BASE_URL_REACTOR: '${{ secrets.API_BASE_URL_REACTOR }}'" >> src/environments/environment.ts
-          echo "};" >> src/environments/environment.ts
-
       - name: Run tests (if exists)
         run: |
           if ls src/**/*.spec.ts 1> /dev/null 2>&1; then
