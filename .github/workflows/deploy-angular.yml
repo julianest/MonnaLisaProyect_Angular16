@@ -41,14 +41,14 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      # Paso 2: Ejecutar pruebas unitarias
+      # Paso 2.1: Ejecutar pruebas unitarias
       - name: Ejecutar pruebas unitarias
         run: npm test -- --code-coverage --browsers=ChromeHeadless --watch=false
 
       - name: Verificar la existencia del reporte de cobertura
         run: ls -R coverage/
 
-      # Paso 3: Análisis con SonarQube
+      # Paso 2.2: Análisis con SonarQube
       - name: Análisis con SonarQube
         uses: SonarSource/sonarqube-scan-action@master
         env:
@@ -60,10 +60,15 @@ jobs:
           args: >
             -Dsonar.organization=julianest
             -Dsonar.projectKey=julianest_MonnaLisaProyect_Angular16
-            -Dsonar.sources=src
             -Dsonar.branch.name=${{ github.ref_name }}
-            -Dsonar.exclusions=**/*.css,**/*.yml
+            -Dsonar.sources=src
+            -Dsonar.tests=src
+            -Dsonar.test.inclusions=**/*.spec.ts
+            -Dsonar.test.exclusions=**/models/**,**/utils/**,**/guard/**,**/assets/**
+            -Dsonar.exclusions=**/*.css,**/*.yml, **/*.conf.ts
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.testExecutionReportPaths=reports/sonar_report.xml
+
 
 
   # Paso 3: Obtener la versión y construir la imagen Docker
