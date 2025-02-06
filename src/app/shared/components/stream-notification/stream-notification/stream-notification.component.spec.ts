@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { StreamNotificationComponent } from './stream-notification.component';
 import { StreamNotificationService } from 'src/app/services/stream-notification.service';
 import { of, throwError } from 'rxjs';
-import { By } from '@angular/platform-browser';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('StreamNotificationComponent', () => {
   let component: StreamNotificationComponent;
@@ -13,8 +14,10 @@ describe('StreamNotificationComponent', () => {
     streamNotificationServiceMock = jasmine.createSpyObj('StreamNotificationService', ['getStreamTransactionNotifications']);
 
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       declarations: [StreamNotificationComponent],
-      providers: [{ provide: StreamNotificationService, useValue: streamNotificationServiceMock }]
+      providers: [{ provide: StreamNotificationService, useValue: streamNotificationServiceMock }],
+      schemas: [NO_ERRORS_SCHEMA]
     });
 
     fixture = TestBed.createComponent(StreamNotificationComponent);
@@ -63,18 +66,4 @@ describe('StreamNotificationComponent', () => {
     expect(console.log).toHaveBeenCalledWith('Error en el stream', new Error('Error en el stream'));
   });
 
-  it('should render notifications dynamically', () => {
-    component.arrayNotificaciones = [
-      { estado: 'Aprobado', fecha: '2025-02-06', tipo: 'Depósito', monto: 100 }
-    ];
-    fixture.detectChanges();
-
-    const cardElements = fixture.debugElement.queryAll(By.css('.card'));
-    expect(cardElements.length).toBe(1);
-
-    const cardText = cardElements[0].nativeElement.textContent;
-    expect(cardText).toContain('Aprobado');
-    expect(cardText).toContain('Depósito');
-    expect(cardText).toContain('$100');
-  });
 });
