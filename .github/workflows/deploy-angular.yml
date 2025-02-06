@@ -10,25 +10,57 @@ permissions:
   packages: write
 
 jobs:
+  # Paso 1: Build
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout código fuente
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install dependencies
+      - name: Instalar dependencias
         run: npm ci
 
-      - name: Run tests (if exists)
+  # Paso 2: Tests (Depende de Build)
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout código fuente
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Ejecutar pruebas unitarias
         run: npm test -- --code-coverage --browsers=ChromeHeadless --watch=false
 
-      - name: SonarQube Analysis
+  # Paso 3: Análisis de Código (Depende de Tests)
+  code_analysis:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout código fuente
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Análisis con SonarQube
         uses: SonarSource/sonarqube-scan-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -44,31 +76,53 @@ jobs:
             -Dsonar.exclusions=**/*.css,**/*.yml
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
 
-      - name: Get latest version
+  # Paso 4: Obtener última versión para versionado automático.
+  versioning:
+    runs-on: ubuntu-latest
+    needs: code_analysis
+    steps:
+      - name: Obtener última versión de la imagen Docker
         id: versioning
         run: |
-          VERSION=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          https://ghcr.io/v2/${{ github.repository_owner }}/angular-app/tags/list | jq -r '.tags | map(select(test("v[0-9]+\\.[0-9]+\\.[0-9]+$"))) | sort | last')
+          RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          https://ghcr.io/v2/${{ github.repository_owner }}/angular-app/tags/list)
 
-          if [[ -z "$VERSION" ]]; then
+          TAGS=$(echo "$RESPONSE" | jq -r '.tags // empty')
+
+          if [[ -z "$TAGS" || "$TAGS" == "null" ]]; then
             VERSION="v1.0.0"
           else
-            IFS='.' read -r major minor patch <<< "${VERSION#v}"
-            PATCH=$((patch + 1))
-            VERSION="v$major.$minor.$PATCH"
+            VERSION=$(echo "$TAGS" | jq -r 'map(select(test("v[0-9]+\\.[0-9]+\\.[0-9]+$"))) | sort | last')
+
+            if [[ -z "$VERSION" || "$VERSION" == "null" ]]; then
+              VERSION="v1.0.0"
+            else
+              IFS='.' read -r major minor patch <<< "${VERSION#v}"
+              PATCH=$((patch + 1))
+              VERSION="v$major.$minor.$PATCH"
+            fi
           fi
 
+          echo "VERSION=$VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Build Docker Image
+  # Paso 5: Construcción y Publicación.
+  docker_build_push:
+    runs-on: ubuntu-latest
+    needs: versioning
+    steps:
+      - name: Checkout código fuente
+        uses: actions/checkout@v4
+
+      - name: Construir imagen Docker
         run: docker build -t ghcr.io/${{ github.repository_owner }}/angular-app:${{ env.VERSION }} -f Containerfile .
 
-      - name: Login to GitHub Container Registry
+      - name: Autenticación en GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push Docker Image
+      - name: Subir imagen Docker al registro
         run: docker push ghcr.io/${{ github.repository_owner }}/angular-app:${{ env.VERSION }}
