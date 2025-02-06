@@ -126,9 +126,12 @@ jobs:
         run: |
           echo "Versión final a usar: $VERSION"
 
+      - name: Listar archivos en el directorio
+        run: ls -l src/
+
       # Construir la imagen Docker
       - name: Construir imagen Docker
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/angular-app:${{ env.VERSION }} -f Containerfile .
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/angular-app:${{ env.VERSION }} -f src/Containerfile src/
 
       # Autenticación en GitHub Container Registry
       - name: Autenticación en GitHub Container Registry
