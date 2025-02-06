@@ -63,9 +63,6 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Verificar reporte de cobertura
-        run: ls -R coverage/
-
       - name: Análisis con SonarQube
         uses: SonarSource/sonarqube-scan-action@master
         env:
