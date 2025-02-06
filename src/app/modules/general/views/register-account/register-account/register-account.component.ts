@@ -35,7 +35,7 @@ constructor(
 registerAccountInitializeForm() {
     this.registerAccountForm = this.formBuilder.group({
       inputBalance: ['', [Validators.required, Validators.maxLength(8)]],
-      inputTypeAccount: ['', [Validators.required, Validators.maxLength(8)]]
+      inputTypeAccount: ['', [Validators.required]]
     });
   }
 
@@ -58,7 +58,7 @@ registerAccountInitializeForm() {
           this.spinnerService.hide();
           if (data.code === 200) {
             this.accountSuccess = true;
-            this.message = data.message;
+            this.message = '¡Cuenta Creada Exitosamente!';
             this.numberAccount = data.response.numeroCuenta;
             this.numberIdentification = accountData.numeroIdetificacion;
             this.balance = accountData.saldo;
@@ -75,7 +75,11 @@ registerAccountInitializeForm() {
   }
 
   resetForm() {
-    this.registerAccountForm.reset();
+    this.registerAccountForm.reset({
+      // Establecemos explícitamente a vacío los campos del formulario
+      inputBalance: '',
+      inputTypeAccount: ''
+    });
   }
 
   get balanceWrong() {
