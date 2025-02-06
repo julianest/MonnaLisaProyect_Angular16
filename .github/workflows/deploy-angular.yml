@@ -60,8 +60,11 @@ jobs:
           args: >
             -Dsonar.organization=julianest
             -Dsonar.projectKey=julianest_MonnaLisaProyect_Angular16
-            -Dsonar.sources=src
             -Dsonar.branch.name=${{ github.ref_name }}
+            -Dsonar.sources=src
+            -Dsonar.tests=src
+            -Dsonar.test.inclusions=**/*.spec.ts
+            -Dsonar.test.exclusions=**/models/**,**/utils/**,**/guard/**,**/assets/**
             -Dsonar.exclusions=**/*.css,**/*.yml
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
 
