@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WithdrawComponent } from './withdraw.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('WithdrawComponent', () => {
   let component: WithdrawComponent;
@@ -8,7 +9,8 @@ describe('WithdrawComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [WithdrawComponent]
+      declarations: [WithdrawComponent],
+      imports: [HttpClientTestingModule]
     });
     fixture = TestBed.createComponent(WithdrawComponent);
     component = fixture.componentInstance;
