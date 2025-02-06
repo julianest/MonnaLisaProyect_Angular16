@@ -11,7 +11,7 @@ module.exports = function (config: Config & any) {
       require('karma-coverage')
     ],
     client: {
-      clearContext: false // Mantiene los resultados de pruebas visibles en la UI de Karma
+      clearContext: false
     },
     coverageReporter: {
       type: 'lcov',
