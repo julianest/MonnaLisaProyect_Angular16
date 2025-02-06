@@ -15,6 +15,7 @@ export class DepositComponent {
   dateToast: string = '';
   statusToast: string = '';
   typeToast: string = '';
+  
 
   arrayNotificaciones: any[] = [];
   arrayNotificacionesFinal: any[] = [];
