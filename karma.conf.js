@@ -29,7 +29,9 @@ module.exports = function (config) {
       //filePattern: '**/*.xml', // Asegúrate de que se esté generando un archivo .xml
       encoding: 'utf-8',
       legacyMode: false,
-      reportName: 'sonar_report.xml'
+      reportName: () => {
+        return 'sonar_report.xml';
+      }
     },
     singleRun: true,
     customLaunchers:{
