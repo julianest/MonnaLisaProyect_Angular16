@@ -65,7 +65,7 @@ jobs:
             -Dsonar.tests=src
             -Dsonar.test.inclusions=**/*.spec.ts
             -Dsonar.test.exclusions=**/models/**,**/utils/**,**/guard/**,**/assets/**
-            -Dsonar.exclusions=**/*.css,**/*.yml, **/*.conf.ts
+            -Dsonar.exclusions=**/*.css,**/*.yml
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.testExecutionReportPaths=reports/sonar_report.xml
 
