@@ -44,6 +44,15 @@ jobs:
       - name: Ejecutar pruebas unitarias
         run: npm test -- --code-coverage --browsers=ChromeHeadless --watch=false
 
+      - name: Verificar la existencia del reporte de cobertura
+        run: ls -R coverage/
+
+      - name: Guardar reporte de cobertura
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage/
+
   # Paso 3: Análisis de Código (Depende de Tests)
   Sonar_code_analysis:
     runs-on: ubuntu-latest
@@ -59,6 +68,9 @@ jobs:
 
       - name: Instalar dependencias
         run: npm ci
+
+      - name: Verificar reporte de cobertura
+        run: ls -R coverage/
 
       - name: Análisis con SonarQube
         uses: SonarSource/sonarqube-scan-action@master
@@ -76,59 +88,58 @@ jobs:
             -Dsonar.exclusions=**/*.css,**/*.yml
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
 
-  # Paso 4: Obtener última versión para versionado automático.
-  Versioning:
+  # Paso 4: Obtener la versión y construir la imagen Docker
+
+  versioning_and_build:
     runs-on: ubuntu-latest
-    needs: Sonar_code_analysis
-    outputs:
-      version: ${{ steps.set_version.outputs.version }}
+    needs: Sonar_code_analysis  # Asegúrate de que el análisis de SonarQube haya terminado antes
     steps:
-      - name: Obtener última versión de la imagen Docker
+      - name: Checkout código fuente
+        uses: actions/checkout@v4
+
+      # Paso para obtener la última versión de la imagen Docker y calcular la nueva versión
+      - name: Obtener última versión de la imagen Docker y versionado automático
         id: versioning
         run: |
+          # Obtener la lista de tags de Docker
           RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           https://ghcr.io/v2/${{ github.repository_owner }}/angular-app/tags/list)
 
+          # Obtener los tags
           TAGS=$(echo "$RESPONSE" | jq -r '.tags // empty')
 
+          # Si no existen tags, usar v1.0.0
           if [[ -z "$TAGS" || "$TAGS" == "null" ]]; then
             VERSION="v1.0.0"
           else
+            # Seleccionar el último tag válido
             VERSION=$(echo "$TAGS" | jq -r 'map(select(test("v[0-9]+\\.[0-9]+\\.[0-9]+$"))) | sort | last')
 
+            # Si no se encuentra una versión, se establece como v1.0.0
             if [[ -z "$VERSION" || "$VERSION" == "null" ]]; then
               VERSION="v1.0.0"
             else
+              # Incrementar el número de patch
               IFS='.' read -r major minor patch <<< "${VERSION#v}"
               PATCH=$((patch + 1))
               VERSION="v$major.$minor.$PATCH"
             fi
           fi
 
-          echo "VERSION=$VERSION"
+          # Exportar la versión al entorno global
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "La versión calculada es: $VERSION"
 
-  # Paso 5: Construcción y Publicación.
-  Image_Build_Push:
-    runs-on: ubuntu-latest
-    needs: Versioning
-    env:
-      VERSION: ${{ needs.versioning.outputs.version }} # Pasar la versión
-    steps:
-      - name: Checkout código fuente
-        uses: actions/checkout@v4
-
-      - name: Definir versión desde versión generada
-        run: echo "VERSION=${{ needs.versioning.outputs.version }}" >> $GITHUB_ENV
-
+      # Verificar la versión antes de construir
       - name: Verificar versión antes de construir
         run: |
           echo "Versión final a usar: $VERSION"
 
+      # Construir la imagen Docker
       - name: Construir imagen Docker
         run: docker build -t ghcr.io/${{ github.repository_owner }}/angular-app:${{ env.VERSION }} -f Containerfile .
 
+      # Autenticación en GitHub Container Registry
       - name: Autenticación en GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -136,5 +147,6 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Subir la imagen Docker al registro
       - name: Subir imagen Docker al registro
         run: docker push ghcr.io/${{ github.repository_owner }}/angular-app:${{ env.VERSION }}
