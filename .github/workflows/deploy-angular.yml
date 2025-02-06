@@ -131,7 +131,7 @@ jobs:
 
       # Construir la imagen Docker
       - name: Construir imagen Docker
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/angular-app:${{ env.VERSION }} -f src/ContainerFile .
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/angular-app:${{ env.VERSION }} -f ContainerFile .
 
       # Autenticación en GitHub Container Registry
       - name: Autenticación en GitHub Container Registry
