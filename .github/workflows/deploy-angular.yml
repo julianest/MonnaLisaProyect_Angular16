@@ -47,12 +47,6 @@ jobs:
       - name: Verificar la existencia del reporte de cobertura
         run: ls -R coverage/
 
-      - name: Guardar reporte de cobertura
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-report
-          path: coverage/
-
   # Paso 3: Análisis de Código (Depende de Tests)
   Sonar_code_analysis:
     runs-on: ubuntu-latest
