@@ -26,11 +26,10 @@ module.exports = function (config) {
       basePath: 'src/app',
       outputFolder: 'reports',
       filePattern: '**/*spec.ts',
+      //filePattern: '**/*.xml', // Asegúrate de que se esté generando un archivo .xml
       encoding: 'utf-8',
       legacyMode: false,
-      reportName: () => {
-        return 'sonar_report.xml';
-      }
+      reportName: 'sonar_report.xml'
     },
     singleRun: true,
     customLaunchers:{
