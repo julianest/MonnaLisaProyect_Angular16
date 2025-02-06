@@ -43,40 +43,7 @@ jobs:
 
       # Paso 2.1: Ejecutar pruebas unitarias
       - name: Ejecutar pruebas unitarias
-        run: npm test -- --code-coverage --browsers=ChromeHeadless --watch=false
-
-      - name: Verificar la existencia del reporte de cobertura
-        run: ls -R coverage/
-
-      - name: Crear carpeta de reporte SonarQube
-        run: mkdir -p reports
-
-      - name: Verificar la existencia de la carpeta 'reports'
-        run: ls -R reports/  # Verifica si la carpeta 'reports' existe
-
-      - name: Verificar si se genera la carpeta 'reports'
-        run: |
-          if [ -d "reports" ]; then
-            echo "La carpeta 'reports' existe."
-          else
-            echo "La carpeta 'reports' no se ha generado."
-            exit 1
-          fi
-
-      - name: Verificar si se genera el archivo 'sonar_report.xml' en 'reports'
-        run: |
-          if [ -f "reports/sonar_report.xml" ]; then
-            echo "El archivo 'sonar_report.xml' existe."
-          else
-            echo "El archivo 'sonar_report.xml' no se ha generado."
-            exit 1
-          fi
-
-      - name: Verificar la existencia del archivo 'sonar_report.xml'
-        run: ls -l reports/sonar_report.xml
-      # Paso para verificar el contenido del archivo sonar_report.xml
-      - name: Verificar contenido del reporte SonarQube
-        run: cat reports/sonar_report.xml
+        run: npm run test:build
 
       # Paso 2.2: Análisis con SonarQube
       - name: Análisis con SonarQube
