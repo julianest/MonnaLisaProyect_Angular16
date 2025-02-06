@@ -10,8 +10,8 @@ permissions:
   packages: write
 
 jobs:
-  # Paso 1: Build
-  Build:
+  # Trabajo de preparación
+  prepare:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout código fuente
@@ -25,7 +25,38 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-  # Paso 2: Tests (Depende de Build)
+      - name: Guardar node_modules en caché
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-node\-</span>{{ hashFiles('package-lock.json') }}
+
+  # Trabajo de Build
+  Build:
+    runs-on: ubuntu-latest
+    needs: prepare
+    steps:
+      - name: Checkout código fuente
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar la aplicación
+        run: npm run build
+
+      - name: Guardar build en caché
+        uses: actions/cache@v3
+        with:
+          path: dist
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-build\-</span>{{ hashFiles('dist/**') }}
+
+  # Trabajo de Tests
   Test:
     runs-on: ubuntu-latest
     needs: Build
@@ -41,13 +72,19 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
+      - name: Restaurar build desde caché
+        uses: actions/cache@v3
+        with:
+          path: dist
+          key: <span class="math-inline">\{\{ runner\.os \}\}\-build\-</span>{{ hashFiles('dist/**') }}
+
       - name: Ejecutar pruebas unitarias
         run: npm run test:build
 
       - name: Verificar la existencia del reporte de cobertura
         run: ls -R coverage/
 
-  # Paso 3: Análisis de Código (Depende de Tests)
+  # Trabajo de Análisis de Código
   Sonar_code_analysis:
     runs-on: ubuntu-latest
     needs: Test
@@ -63,60 +100,62 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Análisis con SonarQube
+      - name: Análisis con SonarScanner
         uses: SonarSource/sonarqube-scan-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        continue-on-error: true # No bloquea el flujo si falla
-        with:
-          args: >
-            -Dsonar.organization=julianest
-            -Dsonar.projectKey=julianest_MonnaLisaProyect_Angular16
-            -Dsonar.branch.name=${{ github.ref_name }}
+          SONAR_HOST_URL: <span class="math-inline">\{\{ secrets\.SONAR\_HOST\_URL \}\}
+          continue\-on\-error\: true
+            with\:
+            args\: \>
+            \-Dsonar\.organization\=julianest
+            \-Dsonar\.projectKey\=julianest\_MonnaLisaProyect\_Angular16
+            \-Dsonar\.branch\.name\=</span>{{ github.ref_name }}
             -Dsonar.sources=src
             -Dsonar.tests=src
             -Dsonar.test.inclusions=**/*.spec.ts
             -Dsonar.test.exclusions=**/models/**,**/utils/**,**/guard/**,**/assets/**
             -Dsonar.exclusions=**/*.css,**/*.yml
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-            -Dsonar.testExecutionReportPaths=reports/sonar_report.xml
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info # Ajusta la ruta si es necesario
+            -Dsonar.testExecutionReportPaths=coverage/lcov.info # Usa el reporte correcto para Angular
 
-
-  # Paso 4: Obtener la versión y construir la imagen Docker
-
+  # Trabajo de Versión y Construcción de Docker
   versioning_and_build:
     runs-on: ubuntu-latest
-    needs: Sonar_code_analysis  # Asegúrate de que el análisis de SonarQube haya terminado antes
+    needs: Sonar_code_analysis
     steps:
       - name: Checkout código fuente
         uses: actions/checkout@v4
 
-      # Paso para obtener la última versión de la imagen Docker y calcular la nueva versión
       - name: Obtener última versión de la imagen Docker y versionado automático
         id: versioning
         run: |
           # Obtener la lista de tags de Docker
-          RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          https://ghcr.io/v2/${{ github.repository_owner }}/angular-app/tags/list)
+          RESPONSE=$(curl -s -H "Authorization: token <span class="math-inline">\{\{ secrets\.GITHUB\_TOKEN \}\}" \\
+          https\://ghcr\.io/v2/</span>{{ github.repository_owner }}/angular-app/tags/list)
 
-          # Obtener los tags
-          TAGS=$(echo "$RESPONSE" | jq -r '.tags // empty')
+          # Manejo de errores en curl
+          if [[ ! <span class="math-inline">? \-eq 0 \]\]; then
+            echo "Error al obtener la lista de tags de Docker"
+            exit 1
+          fi
+          \# Obtener los tags
+          TAGS\=</span>(echo "$RESPONSE" | jq -r '.tags // empty')
 
           # Si no existen tags, usar v1.0.0
-          if [[ -z "$TAGS" || "$TAGS" == "null" ]]; then
-            VERSION="v1.0.0"
+          if [[ -z "<span class="math-inline">TAGS" \]\]; then
+            VERSION\="v1\.0\.0"
           else
-            # Seleccionar el último tag válido
-            VERSION=$(echo "$TAGS" | jq -r 'map(select(test("v[0-9]+\\.[0-9]+\\.[0-9]+$"))) | sort | last')
+            \# Seleccionar el último tag válido
+            VERSION\=</span>(echo "<span class="math-inline">TAGS" \| jq \-r 'map\(select\(test\("v\[0\-9\]\+\\\\\.\[0\-9\]\+\\\\\.\[0\-9\]\+</span>"))) | sort | last')
 
             # Si no se encuentra una versión, se establece como v1.0.0
-            if [[ -z "$VERSION" || "$VERSION" == "null" ]]; then
-              VERSION="v1.0.0"
+            if [[ -z "<span class="math-inline">VERSION" \]\]; then
+              VERSION\="v1\.0\.0"
             else
-              # Incrementar el número de patch
-              IFS='.' read -r major minor patch <<< "${VERSION#v}"
+              \# Incrementar el número de patch
+              IFS\='\.' read \-r major minor patch <<< "</span>{VERSION#v}"
               PATCH=$((patch + 1))
               VERSION="v$major.$minor.$PATCH"
             fi
@@ -129,23 +168,9 @@ jobs:
       # Verificar la versión antes de construir
       - name: Verificar versión antes de construir
         run: |
-          echo "Versión final a usar: $VERSION"
+          echo "Versión final a usar: <span class="math-inline">VERSION"
+      \- name\: Construir imagen Docker
+        run\: docker build \-t ghcr\.io/</span>{{ github.repository_owner }}/angular-app:${{ env.VERSION }} -f ContainerFile .
 
-      - name: Listar archivos en el directorio
-        run: ls -l src/
-
-      # Construir la imagen Docker
-      - name: Construir imagen Docker
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/angular-app:${{ env.VERSION }} -f ContainerFile .
-
-      # Autenticación en GitHub Container Registry
       - name: Autenticación en GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      # Subir la imagen Docker al registro
-      - name: Subir imagen Docker al registro
-        run: docker push ghcr.io/${{ github.repository_owner }}/angular-app:${{ env.VERSION }}
+        uses: docker/login-action
