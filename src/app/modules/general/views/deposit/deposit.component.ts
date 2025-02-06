@@ -37,7 +37,7 @@ export class DepositComponent {
       next: (transactions: any) => {
         if (transactions) {
           this.arrayNotificaciones = transactions;
-        }    
+        }
       },
       error: (error) => {
         console.error('Error al recibir transacciones', error);

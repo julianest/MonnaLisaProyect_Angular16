@@ -75,7 +75,11 @@ export class LoginComponent {
   }
 
   resetForm() {
-    this.loginForm.reset();
+    this.loginForm.reset({
+      // Establecemos explícitamente a vacío los campos del formulario
+      inputEmail: '',
+      inputPassword: ''
+    });
   }
 
   get emailErroneo() {
