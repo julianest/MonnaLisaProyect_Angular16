@@ -48,6 +48,11 @@ jobs:
       - name: Verificar la existencia del reporte de cobertura
         run: ls -R coverage/
 
+      - name: Verificar la existencia de la carpeta 'reports'
+        run: ls -R reports/  # Verifica si la carpeta 'reports' existe
+
+      - name: Verificar la existencia del archivo 'sonar_report.xml'
+        run: ls -l reports/sonar_report.xml
       # Paso para verificar el contenido del archivo sonar_report.xml
       - name: Verificar contenido del reporte SonarQube
         run: cat reports/sonar_report.xml
