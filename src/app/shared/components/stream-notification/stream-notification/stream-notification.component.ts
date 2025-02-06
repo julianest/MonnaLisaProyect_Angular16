@@ -22,6 +22,9 @@ export class StreamNotificationComponent {
         transaction.forEach((element: any) => {
           this.arrayNotificaciones.push(element);
         });
+        setTimeout(() => {
+          this.arrayNotificaciones = [];
+        }, 3000);
       },
       error: (error) => {
         console.log('Error en el stream', error);

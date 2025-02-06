@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GeneralService } from '../general.service';
 import { Alertas } from 'utils/alerts';
 import { BankAccount } from 'src/app/models/response/bankAccount-response.model';
+import { StreamNotificationService } from 'src/app/services/stream-notification.service';
 
 @Component({
   selector: 'app-withdraw',
@@ -11,19 +12,31 @@ import { BankAccount } from 'src/app/models/response/bankAccount-response.model'
 })
 export class WithdrawComponent implements OnInit {
   bankAccount: BankAccount[] = [];
-
   withdrawForm!: FormGroup;
+  arrayNotificacionesFinal: any[] = [];
 
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly services: GeneralService,
-    private readonly alert: Alertas
+    private readonly alert: Alertas,
+    private readonly streamNotificaction: StreamNotificationService
   ) {
     this.withdrawInitializeForm();
   }
 
   ngOnInit(): void {
     this.getAccountById();
+    this.streamNotificaction.setTransactionType('RETIRO');
+    this.streamNotificaction.getStreamTransactionNotifications().subscribe({
+      next: (transactions: any) => {
+        if (transactions) {
+          this.arrayNotificacionesFinal = transactions;
+        }    
+      },
+      error: (error) => {
+        console.error('Error al recibir transacciones', error);
+      }
+    });
   }
 
   withdrawInitializeForm() {
@@ -37,8 +50,6 @@ export class WithdrawComponent implements OnInit {
     const url = String(localStorage.getItem('id_user'));
     this.services.getInfoUser(url).subscribe({
       next: (resp: any) => {
-        console.log(resp);
-
         if (resp.code === 200) {
           this.bankAccount.push(...resp.response.cuentasBancarias);
           this.alert.cerrar();
@@ -58,8 +69,6 @@ export class WithdrawComponent implements OnInit {
         control.markAllAsTouched();
       });
     } else {
-      this.alert.loading();
-
       const payload = {
         numeroCuenta: Number(this.withdrawForm.value.inputAccount),
         monto: Number(this.withdrawForm.value.inputWithdraw),
@@ -70,7 +79,18 @@ export class WithdrawComponent implements OnInit {
           if (resp.code === 200) {
             this.withdrawForm.reset();
             localStorage.setItem('numberAccount', String(payload.numeroCuenta));
-            this.alert.success('Retiro exitoso', resp.message);
+            
+            this.streamNotificaction.getStreamTransactionNotifications().subscribe({
+              next: (transaction: any) => {
+                if (!transaction) return;
+              
+                
+                this.streamNotificaction.arrayCompleto = transaction;
+                this.arrayNotificacionesFinal = [...this.streamNotificaction.arrayCompleto];
+              },
+              error: (error) => console.error('Error al obtener las notificaciones:', error),
+            });
+
           } else {
             this.alert.warning('Ocurrió un problema', 'Por favor revisar la información del retiro');
           }

@@ -37,7 +37,7 @@
                     Revisar el saldo de la cuenta.
                   </small>
                 </div>
-              </div>              
+              </div>
             </div>
           </div>
           <div class="d-flex justify-content-between mt-4 px-3">
@@ -56,14 +56,14 @@
 
 <div *ngIf="accountSuccess" class="mt-4 d-flex justify-content-center">
   <div class="p-3 shadow-lg border rounded bg-white text-center" style="max-width: 600px; width: 100%;">
-    <h5 class="text-success fw-bold">¡Cuenta Creada Exitosamente!</h5>
+    <h5 class="text-success fw-bold">{{ message }} </h5>
     <p class="text-dark">
       El usuario identificado con el número de identificación
       <span class="fw-bold text-success">{{ numberIdentification }}</span>
       acaba de crear la cuenta número
       <span class="fw-bold text-success">{{ numberAccount }}</span> exitosamente.
       con un saldo de
-      <span class="fw-bold text-success">$ {{ balance | currency:'COP':'symbol' }} {{ balance | numberToText }}</span> exitosamente.
+      <span class="fw-bold text-success">$ {{ balance | currency:'COP':'symbol' }} {{ balance | numberToText }}</span>.
     </p>
   </div>
 </div>

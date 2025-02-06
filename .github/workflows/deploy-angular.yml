@@ -1,0 +1,136 @@
+name: Angular Banksoft CI/CD
+
+on:
+  push:
+    branches: ["developer"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  # Paso 1: Build
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código fuente
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Instalar dependencias
+        run: npm ci
+
+  # Paso 2: Test and Sonar
+  Test_and_Sonar_analysis:
+    runs-on: ubuntu-latest
+    needs: Build
+    steps:
+      - name: Checkout código fuente
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      # Paso 2: Ejecutar pruebas unitarias
+      - name: Ejecutar pruebas unitarias
+        run: npm test -- --code-coverage --browsers=ChromeHeadless --watch=false
+
+      - name: Verificar la existencia del reporte de cobertura
+        run: ls -R coverage/
+
+      # Paso 3: Análisis con SonarQube
+      - name: Análisis con SonarQube
+        uses: SonarSource/sonarqube-scan-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        continue-on-error: true # No bloquea el flujo si falla
+        with:
+          args: >
+            -Dsonar.organization=julianest
+            -Dsonar.projectKey=julianest_MonnaLisaProyect_Angular16
+            -Dsonar.branch.name=${{ github.ref_name }}
+            -Dsonar.sources=src
+            -Dsonar.tests=src
+            -Dsonar.test.inclusions=**/*.spec.ts
+            -Dsonar.test.exclusions=**/models/**,**/utils/**,**/guard/**,**/assets/**
+            -Dsonar.exclusions=**/*.css,**/*.yml
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+
+
+  # Paso 3: Obtener la versión y construir la imagen Docker
+
+  versioning_and_build:
+    runs-on: ubuntu-latest
+    needs: Test_and_Sonar_analysis
+    steps:
+      - name: Checkout código fuente
+        uses: actions/checkout@v4
+
+      # Paso para obtener la última versión de la imagen Docker y calcular la nueva versión
+      - name: Obtener última versión de la imagen Docker y versionado automático
+        id: versioning
+        run: |
+          # Obtener la lista de tags de Docker
+          RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          https://ghcr.io/v2/${{ github.repository_owner }}/angular-app/tags/list)
+
+          # Obtener los tags
+          TAGS=$(echo "$RESPONSE" | jq -r '.tags // empty')
+
+          # Si no existen tags, usar v1.0.0
+          if [[ -z "$TAGS" || "$TAGS" == "null" ]]; then
+            VERSION="v1.0.0"
+          else
+            # Seleccionar el último tag válido
+            VERSION=$(echo "$TAGS" | jq -r 'map(select(test("v[0-9]+\\.[0-9]+\\.[0-9]+$"))) | sort | last')
+
+            # Si no se encuentra una versión, se establece como v1.0.0
+            if [[ -z "$VERSION" || "$VERSION" == "null" ]]; then
+              VERSION="v1.0.0"
+            else
+              # Incrementar el número de patch
+              IFS='.' read -r major minor patch <<< "${VERSION#v}"
+              PATCH=$((patch + 1))
+              VERSION="v$major.$minor.$PATCH"
+            fi
+          fi
+
+          # Exportar la versión al entorno global
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "La versión calculada es: $VERSION"
+
+      # Verificar la versión antes de construir
+      - name: Verificar versión antes de construir
+        run: |
+          echo "Versión final a usar: $VERSION"
+
+      - name: Listar archivos en el directorio
+        run: ls -l src/
+
+      # Construir la imagen Docker
+      - name: Construir imagen Docker
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/angular-app:${{ env.VERSION }} -f ContainerFile .
+
+      # Autenticación en GitHub Container Registry
+      - name: Autenticación en GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Subir la imagen Docker al registro
+      - name: Subir imagen Docker al registro
+        run: docker push ghcr.io/${{ github.repository_owner }}/angular-app:${{ env.VERSION }}
