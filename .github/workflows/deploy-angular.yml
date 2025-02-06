@@ -80,6 +80,8 @@ jobs:
   Versioning:
     runs-on: ubuntu-latest
     needs: Sonar_code_analysis
+    outputs:
+      version: ${{ steps.set_version.outputs.version }}
     steps:
       - name: Obtener última versión de la imagen Docker
         id: versioning
@@ -116,6 +118,13 @@ jobs:
     steps:
       - name: Checkout código fuente
         uses: actions/checkout@v4
+
+      - name: Definir versión desde versión generada
+        run: echo "VERSION=${{ needs.versioning.outputs.version }}" >> $GITHUB_ENV
+
+      - name: Verificar versión antes de construir
+        run: |
+          echo "Versión final a usar: $VERSION"
 
       - name: Construir imagen Docker
         run: docker build -t ghcr.io/${{ github.repository_owner }}/angular-app:${{ env.VERSION }} -f Containerfile .
