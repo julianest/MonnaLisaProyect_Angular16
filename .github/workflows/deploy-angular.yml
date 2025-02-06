@@ -28,7 +28,7 @@ jobs:
       - name: Run tests (if exists)
         run: |
           if ls src/**/*.spec.ts 1> /dev/null 2>&1; then
-            npm test -- --code-coverage --browsers=ChromeHeadless
+            npm test -- --code-coverage --browsers=ChromeHeadless --watch=false
           else
             echo "No test files found, skipping..."
           fi
