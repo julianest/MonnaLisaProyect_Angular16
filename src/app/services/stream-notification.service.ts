@@ -30,7 +30,7 @@ export class StreamNotificationService {
       const newTransaction = JSON.parse(event.data);
 
       this.arrayCompleto.unshift(newTransaction);
-      this.arrayCompleto = this.arrayCompleto.slice(0, 2);
+      this.arrayCompleto = this.arrayCompleto.slice(0, 1);
 
       this.zone.run(() => {
         this.notificationSubject.next([...this.arrayCompleto]);

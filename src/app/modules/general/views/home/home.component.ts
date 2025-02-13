@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
   bankAccount: BankAccount[] = [];
   transactionResponse: TransactionResponse[] = [];
   saldoActual: string = "";
+  cuenta: any;
 
   homeFilterForm!: FormGroup;
 
@@ -42,6 +43,12 @@ export class HomeComponent implements OnInit {
       next: (resp: any) => {
         if (resp.code === 200) {
           this.bankAccount.push(...resp.response.cuentasBancarias);
+
+          if (this.bankAccount.length == 1)  {
+            this.homeFilterForm.controls['inputAccount'].setValue(this.bankAccount[0].numeroCuenta)
+
+            this.homeFilter();
+          }
           this.alert.cerrar();
         } else {
           this.alert.warning("Ocurrió un problema", resp.message);

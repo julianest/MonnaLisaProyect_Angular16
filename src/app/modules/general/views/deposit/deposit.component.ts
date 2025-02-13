@@ -11,12 +11,6 @@ import { Alertas } from 'utils/alerts';
   styleUrls: ['./deposit.component.css'],
 })
 export class DepositComponent {
-  balanceToast: number = 0;
-  dateToast: string = '';
-  statusToast: string = '';
-  typeToast: string = '';
-  
-
   arrayNotificaciones: any[] = [];
   arrayNotificacionesFinal: any[] = [];
   bankAccount: BankAccount[] = [];
@@ -33,17 +27,22 @@ export class DepositComponent {
 
   ngOnInit(): void {
     this.getAccountById();
-    this.streamNotificaction.setTransactionType('DEPOSITO');
-    this.streamNotificaction.getStreamTransactionNotifications().subscribe({
-      next: (transactions: any) => {
-        if (transactions) {
-          this.arrayNotificaciones = transactions;
+  }
+
+  searchDeposit() {
+    setTimeout(() => {
+      this.streamNotificaction.setTransactionType('DEPOSITO');
+      this.streamNotificaction.getStreamTransactionNotifications().subscribe({
+        next: (transactions: any) => {
+          if (transactions) {
+            this.arrayNotificaciones = transactions;
+          }
+        },
+        error: (error) => {
+          console.error('Error al recibir transacciones', error);
         }
-      },
-      error: (error) => {
-        console.error('Error al recibir transacciones', error);
-      }
-    });
+      });
+    }, 3000);
   }
 
   depositInitializeForm() {
@@ -76,6 +75,8 @@ export class DepositComponent {
         control.markAllAsTouched();
       });
     } else {
+      localStorage.setItem('numberAccount', String(this.depositForm.value.inputAccount));
+
       const payload = {
         numeroCuenta: Number(this.depositForm.value.inputAccount),
         monto: Number(this.depositForm.value.inputDeposit),
@@ -84,19 +85,14 @@ export class DepositComponent {
       this.services.depositTransaction(payload).subscribe({
         next: (resp: any) => {
           if (resp.code == 200) {
-            localStorage.setItem('numberAccount', String(payload.numeroCuenta));
+            // localStorage.setItem('numberAccount', String(this.depositForm.value.inputAccount));
+            this.searchDeposit();
           } else {
-            this.alert.warning(
-              'Ocurrió un problema',
-              'Por favor revisar la información del depósito'
-            );
+            this.alert.warning('Ocurrió un problema', 'Por favor revisar la información del depósito');
           }
         },
         error: () => {
-          this.alert.error(
-            'Error desconocido',
-            'Por favor inténtelo más tarde'
-          );
+          this.alert.error('Error desconocido', 'Por favor inténtelo más tarde');
         },
         complete: () => {
           this.depositForm.reset();

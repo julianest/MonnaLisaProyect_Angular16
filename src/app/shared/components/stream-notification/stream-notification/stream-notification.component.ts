@@ -15,7 +15,6 @@ export class StreamNotificationComponent {
     this.streamNotificationService.getStreamTransactionNotifications().subscribe({
       next: (transaction) => {
         if (!transaction) return;
-        console.log(transaction);
 
         this.arrayNotificaciones = [];
 
