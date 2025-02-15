@@ -56,7 +56,7 @@ export class DashboardComponent implements OnInit {
       next: (resp: any) => {
         if (resp.code === 200) {
           localStorage.setItem('nameUser', resp.response.nombre);
-          localStorage.setItem('identificationNumber', resp.response.numeroIdetificacion);
+          localStorage.setItem('identificationNumber', resp.response.numeroIdentificacion);
 
           this.nameUser = String(localStorage.getItem('nameUser'));
           this.identificationnumber = String(localStorage.getItem('identificationNumber'));

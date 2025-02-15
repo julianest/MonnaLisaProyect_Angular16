@@ -49,7 +49,7 @@ export class RegisterComponent {
       this.alert.loading();
 
       const userData: RegisterRequest = {
-        numeroIdetificacion: this.registerForm.controls['inputIdentificationNumber'].value,
+        numeroIdentificacion: this.registerForm.controls['inputIdentificationNumber'].value,
         nombre: this.registerForm.controls['inputName'].value,
         apellido: this.registerForm.controls['inputLastName'].value,
         telefono: this.registerForm.controls['inputPhone'].value,

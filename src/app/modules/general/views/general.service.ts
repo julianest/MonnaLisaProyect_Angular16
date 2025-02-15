@@ -33,6 +33,10 @@ export class GeneralService {
   getInfoUser(url: any) {
     return this.apiService.get("usuario/consultar/"+ url);
   }
+
+  getAccouts(identificationNumber: string) {
+    return this.apiService.get('cuenta-bancaria/consultar-cuentas/'+ identificationNumber);
+  }
 }
 
 

@@ -1,13 +1,12 @@
-<div class="row text-center mt-3">
+<div class="row text-center d-flex justify-content-end align-items-start w-100 mt-5 mt-3">
   <div class="col-6" *ngFor="let item of arrayNotificaciones">
-    <div class="card m-1 p-3">
+    <div class="card m-1 p-3" style="background-color: rgb(206, 205, 205);">
       <div class="card-hearder">
-        <strong>Estado: {{ item.estado }}</strong>
+        <strong>Resumen Transacción:</strong>
       </div>
       <div class="card-body">
-        <small>{{ item.fecha }}</small><br>
-        <strong>{{ item.tipo }}</strong>
-        <strong>${{ item.monto }}</strong>
+        <small>{{ item.fecha | date: 'short' }}</small><br>
+        <strong>${{ item.monto | currency: 'COP ': 'code' }}</strong>
       </div>
     </div>
   </div>

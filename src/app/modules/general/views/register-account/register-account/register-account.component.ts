@@ -50,7 +50,7 @@ registerAccountInitializeForm() {
       const accountData: RegisterAccountRequest = {
         saldo: Number(this.registerAccountForm.controls['inputBalance'].value),
         tipoCuenta: this.registerAccountForm.controls['inputTypeAccount'].value,
-        numeroIdetificacion: String(localStorage.getItem('identificationNumber')),
+        numeroIdentificacion: String(localStorage.getItem('identificationNumber')),
       };
 
       this.generalService.registerAccount(accountData).subscribe({
@@ -60,7 +60,7 @@ registerAccountInitializeForm() {
             this.accountSuccess = true;
             this.message = '¡Cuenta Creada Exitosamente!';
             this.numberAccount = data.response.numeroCuenta;
-            this.numberIdentification = accountData.numeroIdetificacion;
+            this.numberIdentification = accountData.numeroIdentificacion;
             this.balance = accountData.saldo;
           } else {
             this.alert.warning('Advertencia', String(data.message));

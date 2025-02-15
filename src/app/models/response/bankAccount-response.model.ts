@@ -1,4 +1,6 @@
 export interface BankAccount {
     numeroCuenta: number;
-    tipoCuenta?: string;
+    saldo: number;
+    tipoCuenta: string;
+    activa: boolean;
 }

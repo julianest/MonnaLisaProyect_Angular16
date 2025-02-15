@@ -45,4 +45,4 @@
     </div>
   </div>
 </div>
-<app-stream-notification [arrayNotificaciones]="arrayNotificacionesFinal"></app-stream-notification>
+<app-stream-notification *ngIf="arrayNotificaciones.length > 0" [arrayNotificaciones]="arrayNotificaciones"></app-stream-notification>

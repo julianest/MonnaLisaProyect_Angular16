@@ -12,7 +12,6 @@ import { StreamNotificationService } from 'src/app/services/stream-notification.
 })
 export class WithdrawComponent implements OnInit {
   arrayNotificaciones: any[] = [];
-  arrayNotificacionesFinal: any[] = [];
   bankAccount: BankAccount[] = [];
   withdrawForm!: FormGroup;
 
@@ -26,23 +25,21 @@ export class WithdrawComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAccountById();
+    localStorage.removeItem('numberAccount');
+    this.getInformationuser();
   }
 
-  searchWithdraw() {
-    setTimeout(() => {
-      this.streamNotificaction.setTransactionType('RETIRO');
-      this.streamNotificaction.getStreamTransactionNotifications().subscribe({
-        next: (transactions: any) => {
-          if (transactions) {
-            this.arrayNotificaciones = transactions;
-          }
-        },
-        error: (error) => {
-          console.error('Error al recibir transacciones', error);
+  subscribeToNotifications() {
+    this.streamNotificaction.getStreamTransactionNotifications().subscribe({
+      next: (transactions: any[]) => {
+        if (transactions.length > 0) {
+          this.arrayNotificaciones = transactions;
         }
-      });
-    }, 3000);
+      },
+      error: (error) => {
+        console.error('Error al recibir transacciones', error);
+      },
+    });
   }
 
   withdrawInitializeForm() {
@@ -52,12 +49,29 @@ export class WithdrawComponent implements OnInit {
     });
   }
 
-  getAccountById() {
+  getInformationuser() {
+    this.alert.loading();
+
     const url = String(localStorage.getItem('id_user'));
+
     this.services.getInfoUser(url).subscribe({
       next: (resp: any) => {
         if (resp.code === 200) {
-          this.bankAccount.push(...resp.response.cuentasBancarias);
+          const identificationNumber = String(resp.response.numeroIdentificacion);
+
+          this.services.getAccouts(identificationNumber).subscribe({
+            next: (resp: any) => {
+              if (resp.code == 200) {
+                this.bankAccount.push(...resp.response);
+                this.alert.cerrar();
+              } else {
+                this.alert.warning("Ocurrió un problema", resp.message);
+              }
+            },
+            error: (error: any) => {
+              this.alert.warning("Ocurrió un error", error);
+            }
+          });
           this.alert.cerrar();
         } else {
           this.alert.warning('Ocurrió un problema', resp.message);
@@ -85,8 +99,7 @@ export class WithdrawComponent implements OnInit {
       this.services.withdrawTransaction(payload).subscribe({
         next: (resp: any) => {
           if (resp.code == 200) {
-            localStorage.setItem('numberAccount', String(this.withdrawForm.value.inputAccount));            
-            this.searchWithdraw();
+            this.subscribeToNotifications();
           } else {
             this.alert.warning('Ocurrió un problema', 'Por favor revisar la información del retiro');
           }

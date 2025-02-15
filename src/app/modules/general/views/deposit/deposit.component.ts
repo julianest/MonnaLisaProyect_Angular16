@@ -12,7 +12,6 @@ import { Alertas } from 'utils/alerts';
 })
 export class DepositComponent {
   arrayNotificaciones: any[] = [];
-  arrayNotificacionesFinal: any[] = [];
   bankAccount: BankAccount[] = [];
   depositForm!: FormGroup;
 
@@ -26,23 +25,21 @@ export class DepositComponent {
   }
 
   ngOnInit(): void {
-    this.getAccountById();
+    localStorage.removeItem('numberAccount');
+    this.getInformationuser();
   }
 
-  searchDeposit() {
-    setTimeout(() => {
-      this.streamNotificaction.setTransactionType('DEPOSITO');
-      this.streamNotificaction.getStreamTransactionNotifications().subscribe({
-        next: (transactions: any) => {
-          if (transactions) {
-            this.arrayNotificaciones = transactions;
-          }
-        },
-        error: (error) => {
-          console.error('Error al recibir transacciones', error);
-        }
-      });
-    }, 3000);
+  subscribeToNotifications() {
+    this.streamNotificaction.getStreamTransactionNotifications().subscribe({
+      next: (transactions: any[]) => {
+        if (transactions.length > 0) {
+          this.arrayNotificaciones = transactions;
+        }        
+      },
+      error: (error) => {
+        console.error('Error al recibir transacciones', error);
+      },
+    });
   }
 
   depositInitializeForm() {
@@ -52,12 +49,29 @@ export class DepositComponent {
     });
   }
 
-  getAccountById() {
+  getInformationuser() {
+    this.alert.loading();
+
     const url = String(localStorage.getItem('id_user'));
+
     this.services.getInfoUser(url).subscribe({
       next: (resp: any) => {
         if (resp.code === 200) {
-          this.bankAccount.push(...resp.response.cuentasBancarias);
+          const identificationNumber = String(resp.response.numeroIdentificacion);
+
+          this.services.getAccouts(identificationNumber).subscribe({
+            next: (resp: any) => {
+              if (resp.code == 200) {
+                this.bankAccount.push(...resp.response);
+                this.alert.cerrar();
+              } else {
+                this.alert.warning("Ocurrió un problema", resp.message);
+              }
+            },
+            error: (error: any) => {
+              this.alert.warning("Ocurrió un error", error);
+            }
+          });
           this.alert.cerrar();
         } else {
           this.alert.warning('Ocurrió un problema', resp.message);
@@ -65,7 +79,7 @@ export class DepositComponent {
       },
       error: (error: any) => {
         this.alert.warning('Ocurrió un error', error);
-      },
+      }
     });
   }
 
@@ -85,8 +99,7 @@ export class DepositComponent {
       this.services.depositTransaction(payload).subscribe({
         next: (resp: any) => {
           if (resp.code == 200) {
-            // localStorage.setItem('numberAccount', String(this.depositForm.value.inputAccount));
-            this.searchDeposit();
+            this.subscribeToNotifications();
           } else {
             this.alert.warning('Ocurrió un problema', 'Por favor revisar la información del depósito');
           }

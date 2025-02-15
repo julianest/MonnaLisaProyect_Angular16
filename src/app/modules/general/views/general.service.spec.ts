@@ -97,7 +97,7 @@ describe('GeneralService', () => {
 
   // ✅ Test para registerAccount
   it('should call registerAccount and return response', () => {
-    const mockRequest: RegisterAccountRequest = { saldo: 30,  numeroIdetificacion: '1234', tipoCuenta: 'Savings' };
+    const mockRequest: RegisterAccountRequest = { saldo: 30,  numeroIdentificacion: '1234', tipoCuenta: 'Savings' };
     const mockResponse = { success: true };
 
     apiServiceMock.post.and.returnValue(of(mockResponse));

@@ -15,7 +15,7 @@ export class ApiService {
 
   post<T, P>(url: string, payload: P): Observable<T> {
     if (url === 'auth/login' || url === 'auth/register') {
-      this.baseUrl = environment.API_BASE_URL_BACK;
+      this.baseUrl = environment.API_BASE_URL_AUTH;
     } else {
       if (url.startsWith('transacciones/deposito') || url.startsWith('transacciones/retiro')) {
         this.baseUrl = environment.API_BASE_URL_REACTOR;
@@ -42,7 +42,7 @@ export class ApiService {
       Authorization: `Bearer ${localStorage.getItem('access_token') ?? ''}`,
     });
 
-    const url = environment.API_BASE_URL_BACK + params;
+    const url = environment.API_BASE_URL_AUTH + params;
 
     return this.http.get(url, {
       headers,

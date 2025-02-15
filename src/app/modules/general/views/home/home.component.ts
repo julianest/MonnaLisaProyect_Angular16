@@ -34,30 +34,55 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAccountById();
+    localStorage.removeItem('numberAccount');
+    this.getInformationuser();
   }
 
-  getAccountById() {
+  getInformationuser() {
+    this.alert.loading();
+
     const url = String(localStorage.getItem('id_user'));
+
     this.services.getInfoUser(url).subscribe({
       next: (resp: any) => {
         if (resp.code === 200) {
-          this.bankAccount.push(...resp.response.cuentasBancarias);
+          const identificationNumber = String(resp.response.numeroIdentificacion);
 
-          if (this.bankAccount.length == 1)  {
-            this.homeFilterForm.controls['inputAccount'].setValue(this.bankAccount[0].numeroCuenta)
+          this.services.getAccouts(identificationNumber).subscribe({
+            next: (resp: any) => {
+              if (resp.code == 200) {
+                this.bankAccount.push(...resp.response);
 
-            this.homeFilter();
-          }
+                if (this.bankAccount.length == 1)  {
+                  this.homeFilterForm.controls['inputAccount'].setValue(this.bankAccount[0].numeroCuenta)
+      
+                  this.homeFilter();
+                }            
+
+                this.alert.cerrar();
+              } else {
+                this.alert.warning("Ocurrió un problema", resp.message);
+              }
+            },
+            error: (error: any) => {
+              this.alert.warning("Ocurrió un error", error);
+            }
+          });
           this.alert.cerrar();
         } else {
-          this.alert.warning("Ocurrió un problema", resp.message);
+          this.alert.warning('Ocurrió un problema', resp.message);
         }
       },
       error: (error: any) => {
-        this.alert.warning("Ocurrió un error", error);
+        this.alert.warning('Ocurrió un error', error);
       }
     });
+  }
+
+  fn() {
+    const url = String(localStorage.getItem('id_user'));
+
+    this.services.getInfoUser(url).subscribe();
   }
 
   homeFilter() {

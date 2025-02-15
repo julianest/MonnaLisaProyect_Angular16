@@ -12,11 +12,11 @@ export class StreamNotificationComponent {
   constructor(private readonly streamNotificationService: StreamNotificationService){}
 
   ngOnInit(): void {
+    this.arrayNotificaciones = [];
+
     this.streamNotificationService.getStreamTransactionNotifications().subscribe({
       next: (transaction) => {
         if (!transaction) return;
-
-        this.arrayNotificaciones = [];
 
         transaction.forEach((element: any) => {
           this.arrayNotificaciones.push(element);

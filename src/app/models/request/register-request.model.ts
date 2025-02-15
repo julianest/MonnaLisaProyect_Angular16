@@ -1,5 +1,5 @@
 export interface RegisterRequest{
-    numeroIdetificacion: string,
+    numeroIdentificacion: string,
     nombre: string,
     apellido: string,
     telefono: string,
