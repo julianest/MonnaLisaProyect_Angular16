@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GeneralService } from '../general.service';
 import { Alertas } from 'utils/alerts';
+import { AuthService } from '../../../auth/views/auth.service';
+import { ServiceResponse } from 'src/app/models/response/auth-response.model';
+import { AuthLogoutRequest } from 'src/app/models/request/auth-request.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +18,8 @@ export class DashboardComponent implements OnInit {
   constructor(
     private readonly router: Router,
     private readonly services: GeneralService,
-    private readonly alert: Alertas
+    private readonly alert: Alertas,
+    private readonly authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -23,8 +27,32 @@ export class DashboardComponent implements OnInit {
   }
 
   logOut() {
-    localStorage.clear();
-    this.router.navigateByUrl('/login');
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+        this.alert.error("No hay sesión activa", "No se encontró un token válido");
+        return;
+    }
+
+    const credentials: AuthLogoutRequest = { token };
+
+    this.authService.logout(credentials).subscribe({
+      next: (resp: ServiceResponse) => {
+          if (resp.code === 200) {
+              this.alert.success("Sesión Cerrada", resp.message);
+
+              localStorage.clear();
+              setTimeout(() => {
+                  this.router.navigateByUrl('/login');
+              }, 1000);
+          } else {
+              this.alert.error("No se pudo cerrar sesión", "Verificar Token");
+          }
+      },
+      error: () => {
+          this.alert.error("Error desconocido", "Por favor intentelo más tarde");
+      }
+          });
   }
 
   redireccionar(opcion: number) {
