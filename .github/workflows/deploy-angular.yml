@@ -42,7 +42,7 @@ jobs:
         run: npm ci
 
       - name: Ejecutar pruebas unitarias
-        run: npm run test:build
+        run: npm run test
 
       - name: Verificar la existencia del reporte de cobertura
         run: ls -R coverage/

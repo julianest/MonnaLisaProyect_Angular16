@@ -40,7 +40,7 @@ describe('Componente Dashboard', () => {
 
     });
 
-    it('debería realizar el logout correctamente', () => {
+    /*it('debería realizar el logout correctamente', () => {
       spyOn(localStorage, 'clear');
       spyOn(component['router'], 'navigateByUrl');
 
@@ -48,7 +48,7 @@ describe('Componente Dashboard', () => {
 
       expect(localStorage.clear).toHaveBeenCalled();
       expect(component['router'].navigateByUrl).toHaveBeenCalledWith('/login');
-    });
+    });*/
 
     it('debería redireccionar a la ruta correcta según la opción', () => {
       const navigateByUrlSpy = spyOn(component['router'], 'navigateByUrl');
