@@ -42,7 +42,7 @@ jobs:
         run: npm ci
 
       - name: Ejecutar pruebas unitarias
-        run: npm run test
+        run: npm test -- --code-coverage --browsers=ChromeHeadless --watch=false
 
       - name: Verificar la existencia del reporte de cobertura
         run: ls -R coverage/
