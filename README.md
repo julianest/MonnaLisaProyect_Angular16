@@ -33,13 +33,13 @@ Este documento proporciona los pasos para obtener, ejecutar y administrar un con
 - **Descargar la imagen desde GHCR**
 
     ```sh
-    podman pull ghcr.io/julianest/MonnaLisaProyect_Angular16/angular-app:v1.0.0 
+    podman pull ghcr.io/julianest/angular-app:v1.0.0 
     ```
 
 - **Correr el contenedor**
 
     ```sh
-    podman run --rm --name <CONTAINER-NAME> -p 4200:80 -d ghcr.io/julianest/MonnaLisaProyect_Angular16/angular-app:v1.0.0 
+    podman run --rm --name angular-app -p 4200:80 -d ghcr.io/julianest/angular-app:v1.0.0 
     ```
 
 - **Probar la Aplicación**
