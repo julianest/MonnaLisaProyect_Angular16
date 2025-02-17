@@ -39,7 +39,7 @@ Este documento proporciona los pasos para obtener, ejecutar y administrar un con
 - **Correr el contenedor**
 
     ```sh
-    podman run --rm --name angular-app -p 4200:80 -d podman pull ghcr.io/julianest/angular-app:v1.0.0 
+    podman run --rm --name angular-app -p 4200:80 -d ghcr.io/julianest/angular-app:v1.0.0 
     ```
 
 - **Probar la Aplicación**
